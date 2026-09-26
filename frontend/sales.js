@@ -52,7 +52,7 @@ async function loadProducts() {
     try {
 
         const response = await fetch(
-            `http://127.0.0.1:8000/products/${salesUser.user_id}`
+            `https://vendoros-ai-backend.onrender.com/products/${salesUser.user_id}`
         );
 
         const data = await response.json();
@@ -435,7 +435,7 @@ checkoutBtn.addEventListener(
 
                 const response =
                     await fetch(
-                        `http://127.0.0.1:8000/sales/${salesUser.user_id}`,
+                        `https://vendoros-ai-backend.onrender.com/sales/${salesUser.user_id}`,
                         {
                             method: "POST",
 

@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "https://vendoros-ai-backend.onrender.com";
 
 const userData = localStorage.getItem("vendoros_user");
 const userId = localStorage.getItem("user_id");

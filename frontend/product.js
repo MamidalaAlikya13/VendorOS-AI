@@ -28,7 +28,7 @@ async function saveProduct(event) {
 
     try {
         const response = await fetch(
-            `http://127.0.0.1:8000/products/${user.user_id}`,
+            `https://vendoros-ai-backend.onrender.com/products/${user.user_id}`,
             {
                 method: "POST",
                 headers: {

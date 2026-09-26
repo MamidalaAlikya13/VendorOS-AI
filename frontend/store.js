@@ -22,7 +22,7 @@ async function loadStore() {
     try {
 
         const response = await fetch(
-            `http://127.0.0.1:8000/store/${user.user_id}`
+            `https://vendoros-ai-backend.onrender.com/store/${user.user_id}`
         );
 
         if (response.status === 404) {
@@ -114,7 +114,7 @@ storeForm.addEventListener("submit", async (event) => {
 
         // Check whether this retailer already has a store
         const checkResponse = await fetch(
-            `http://127.0.0.1:8000/store/${user.user_id}`
+            `https://vendoros-ai-backend.onrender.com/store/${user.user_id}`
         );
 
 
@@ -125,7 +125,7 @@ storeForm.addEventListener("submit", async (event) => {
 
             // Existing store → UPDATE
             response = await fetch(
-                `http://127.0.0.1:8000/store/${user.user_id}`,
+                `https://vendoros-ai-backend.onrender.com/store/${user.user_id}`,
                 {
                     method: "PUT",
 
@@ -141,7 +141,7 @@ storeForm.addEventListener("submit", async (event) => {
 
             // No store → CREATE
             response = await fetch(
-                `http://127.0.0.1:8000/store/${user.user_id}`,
+                `https://vendoros-ai-backend.onrender.com/store/${user.user_id}`,
                 {
                     method: "POST",
 

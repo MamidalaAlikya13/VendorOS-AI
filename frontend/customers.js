@@ -1,7 +1,9 @@
 const customerUserData = localStorage.getItem("vendoros_user");
 
 if (!customerUserData) {
+
     window.location.href = "login.html";
+
 }
 
 const customerUser = JSON.parse(customerUserData);
@@ -39,9 +41,13 @@ const formMessage =
 let customers = [];
 
 
+
 if (customerUser.name) {
+
     userPill.textContent = customerUser.name;
+
 }
+
 
 
 /* LOAD CUSTOMERS */
@@ -58,7 +64,7 @@ async function loadCustomers() {
 
 
         const response = await fetch(
-            `http://127.0.0.1:8000/customers/${customerUser.user_id}`
+            `https://vendoros-ai-backend.onrender.com/customers/${customerUser.user_id}`
         );
 
 
@@ -96,7 +102,9 @@ async function loadCustomers() {
             "error-state";
 
     }
+
 }
+
 
 
 /* SUMMARY */
@@ -117,7 +125,9 @@ function updateSummary() {
         customers.filter(
             customer => customer.phone
         ).length;
+
 }
+
 
 
 /* RENDER CUSTOMERS */
@@ -136,6 +146,7 @@ function renderCustomers(customerList) {
             "empty-state";
 
         return;
+
     }
 
 
@@ -201,7 +212,9 @@ function renderCustomers(customerList) {
         customerTableBody.appendChild(row);
 
     });
+
 }
+
 
 
 /* SEARCH */
@@ -250,6 +263,7 @@ searchBox.addEventListener(
 );
 
 
+
 /* MODAL */
 
 function openCustomerModal() {
@@ -263,6 +277,7 @@ function openCustomerModal() {
     document
         .getElementById("customerName")
         .focus();
+
 }
 
 
@@ -271,6 +286,7 @@ function closeCustomerModal() {
     customerModal.classList.remove("show");
 
 }
+
 
 
 /* ADD CUSTOMER */
@@ -310,6 +326,7 @@ customerForm.addEventListener(
                 .trim();
 
 
+
         /* NAME VALIDATION */
 
         if (!name) {
@@ -321,7 +338,9 @@ customerForm.addEventListener(
                 "#dc2626";
 
             return;
+
         }
+
 
 
         /* PHONE VALIDATION */
@@ -339,7 +358,9 @@ customerForm.addEventListener(
                 "#dc2626";
 
             return;
+
         }
+
 
 
         /* EMAIL VALIDATION */
@@ -357,7 +378,9 @@ customerForm.addEventListener(
                 "#dc2626";
 
             return;
+
         }
+
 
 
         const saveButton =
@@ -379,17 +402,20 @@ customerForm.addEventListener(
             "#64748b";
 
 
+
         try {
 
             const response =
                 await fetch(
-                    `http://127.0.0.1:8000/customers/${customerUser.user_id}`,
+                    `https://vendoros-ai-backend.onrender.com/customers/${customerUser.user_id}`,
                     {
                         method: "POST",
 
                         headers: {
+
                             "Content-Type":
                                 "application/json"
+
                         },
 
                         body: JSON.stringify({
@@ -406,6 +432,7 @@ customerForm.addEventListener(
                                 address || null
 
                         })
+
                     }
                 );
 
@@ -417,9 +444,13 @@ customerForm.addEventListener(
             if (!response.ok) {
 
                 throw new Error(
+
                     data.detail ||
+
                     data.message ||
+
                     "Unable to save customer."
+
                 );
 
             }
@@ -466,6 +497,7 @@ customerForm.addEventListener(
 );
 
 
+
 /* CLOSE MODAL WHEN CLICKING OUTSIDE */
 
 customerModal.addEventListener(
@@ -473,11 +505,14 @@ customerModal.addEventListener(
     function (event) {
 
         if (event.target === customerModal) {
+
             closeCustomerModal();
+
         }
 
     }
 );
+
 
 
 /* LOGOUT */
@@ -490,7 +525,9 @@ function logoutUser() {
 
     window.location.href =
         "login.html";
+
 }
+
 
 
 /* INITIAL LOAD */

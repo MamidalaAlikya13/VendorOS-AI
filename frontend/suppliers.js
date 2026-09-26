@@ -1,8 +1,9 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "https://vendoros-ai-backend.onrender.com";
 
 const ownerId = localStorage.getItem("user_id");
 
 let suppliers = [];
+
 
 
 // ===============================
@@ -12,19 +13,31 @@ let suppliers = [];
 document.addEventListener("DOMContentLoaded", () => {
 
     if (!ownerId) {
+
         alert("Please login first.");
+
         window.location.href = "login.html";
+
         return;
+
     }
 
     loadSuppliers();
 
-    const searchInput = document.getElementById("searchSupplier");
+    const searchInput =
+        document.getElementById("searchSupplier");
 
     if (searchInput) {
-        searchInput.addEventListener("input", filterSuppliers);
+
+        searchInput.addEventListener(
+            "input",
+            filterSuppliers
+        );
+
     }
+
 });
+
 
 
 // ===============================
@@ -40,7 +53,11 @@ async function loadSuppliers() {
         );
 
         if (!response.ok) {
-            throw new Error("Failed to load suppliers");
+
+            throw new Error(
+                "Failed to load suppliers"
+            );
+
         }
 
         suppliers = await response.json();
@@ -51,13 +68,22 @@ async function loadSuppliers() {
 
         console.error(error);
 
-        document.getElementById("supplierTableContainer").innerHTML = `
+        document.getElementById(
+            "supplierTableContainer"
+        ).innerHTML = `
+
             <div class="empty">
+
                 Unable to load suppliers.
+
             </div>
+
         `;
+
     }
+
 }
+
 
 
 // ===============================
@@ -67,74 +93,125 @@ async function loadSuppliers() {
 function renderSuppliers(list) {
 
     const container =
-        document.getElementById("supplierTableContainer");
+        document.getElementById(
+            "supplierTableContainer"
+        );
 
     updateSummary(list);
+
 
     if (!list.length) {
 
         container.innerHTML = `
+
             <div class="empty">
+
                 No suppliers found.
+
             </div>
+
         `;
 
         return;
+
     }
 
 
     let rows = "";
 
+
     list.forEach((supplier) => {
 
         rows += `
+
             <tr>
 
                 <td>
-                    <strong>${escapeHTML(supplier.name)}</strong>
+
+                    <strong>
+                        ${escapeHTML(supplier.name)}
+                    </strong>
+
                 </td>
+
 
                 <td class="company">
-                    ${escapeHTML(supplier.company || "-")}
+
+                    ${escapeHTML(
+                        supplier.company || "-"
+                    )}
+
                 </td>
 
-                <td>
-                    ${escapeHTML(supplier.phone || "-")}
-                </td>
 
                 <td>
-                    ${escapeHTML(supplier.email || "-")}
+
+                    ${escapeHTML(
+                        supplier.phone || "-"
+                    )}
+
                 </td>
 
+
                 <td>
-                    ${escapeHTML(supplier.address || "-")}
+
+                    ${escapeHTML(
+                        supplier.email || "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        supplier.address || "-"
+                    )}
+
                 </td>
 
             </tr>
+
         `;
+
     });
 
 
     container.innerHTML = `
+
         <table>
 
             <thead>
+
                 <tr>
+
                     <th>Supplier</th>
+
                     <th>Company</th>
+
                     <th>Phone</th>
+
                     <th>Email</th>
+
                     <th>Address</th>
+
                 </tr>
+
             </thead>
 
+
             <tbody>
+
                 ${rows}
+
             </tbody>
 
         </table>
+
     `;
+
 }
+
 
 
 // ===============================
@@ -143,18 +220,31 @@ function renderSuppliers(list) {
 
 function updateSummary(list) {
 
-    document.getElementById("totalSuppliers").textContent =
-        list.length;
+    document.getElementById(
+        "totalSuppliers"
+    ).textContent = list.length;
 
 
     const companies = new Set(
+
         list
-            .map(supplier => supplier.company)
-            .filter(company => company && company.trim() !== "")
+
+            .map(
+                supplier => supplier.company
+            )
+
+            .filter(
+                company =>
+                    company &&
+                    company.trim() !== ""
+            )
+
     );
 
-    document.getElementById("totalCompanies").textContent =
-        companies.size;
+
+    document.getElementById(
+        "totalCompanies"
+    ).textContent = companies.size;
 
 
     const contacts = list.filter(
@@ -163,9 +253,13 @@ function updateSummary(list) {
             supplier.email
     );
 
-    document.getElementById("activeContacts").textContent =
-        contacts.length;
+
+    document.getElementById(
+        "activeContacts"
+    ).textContent = contacts.length;
+
 }
+
 
 
 // ===============================
@@ -182,39 +276,42 @@ function filterSuppliers() {
             .toLowerCase();
 
 
-    const filtered = suppliers.filter((supplier) => {
+    const filtered =
+        suppliers.filter((supplier) => {
 
-        return (
+            return (
 
-            (supplier.name || "")
-                .toLowerCase()
-                .includes(searchValue)
+                (supplier.name || "")
+                    .toLowerCase()
+                    .includes(searchValue)
 
-            ||
+                ||
 
-            (supplier.company || "")
-                .toLowerCase()
-                .includes(searchValue)
+                (supplier.company || "")
+                    .toLowerCase()
+                    .includes(searchValue)
 
-            ||
+                ||
 
-            (supplier.phone || "")
-                .toLowerCase()
-                .includes(searchValue)
+                (supplier.phone || "")
+                    .toLowerCase()
+                    .includes(searchValue)
 
-            ||
+                ||
 
-            (supplier.email || "")
-                .toLowerCase()
-                .includes(searchValue)
+                (supplier.email || "")
+                    .toLowerCase()
+                    .includes(searchValue)
 
-        );
+            );
 
-    });
+        });
 
 
     renderSuppliers(filtered);
+
 }
+
 
 
 // ===============================
@@ -223,10 +320,16 @@ function filterSuppliers() {
 
 function openSupplierModal() {
 
-    const modal = document.getElementById("supplierModal");
+    const modal =
+        document.getElementById(
+            "supplierModal"
+        );
+
 
     if (modal) {
+
         modal.remove();
+
     }
 
 
@@ -267,17 +370,27 @@ function openSupplierModal() {
                 >
 
                     <div>
+
                         <h2 style="margin-bottom:5px;">
+
                             Add Supplier
+
                         </h2>
 
-                        <p style="
-                            color:#64748b;
-                            font-size:13px;
-                        ">
+
+                        <p
+                            style="
+                                color:#64748b;
+                                font-size:13px;
+                            "
+                        >
+
                             Add a supplier to your business directory
+
                         </p>
+
                     </div>
+
 
                     <button
                         onclick="closeSupplierModal()"
@@ -291,7 +404,9 @@ function openSupplierModal() {
                             font-size:18px;
                         "
                     >
+
                         ×
+
                     </button>
 
                 </div>
@@ -309,8 +424,11 @@ function openSupplierModal() {
                                 margin-bottom:7px;
                             "
                         >
+
                             Supplier Name *
+
                         </label>
+
 
                         <input
                             type="text"
@@ -320,6 +438,7 @@ function openSupplierModal() {
                             required
                             style="${inputStyle()}"
                         >
+
 
                         <small
                             id="supplierNameError"
@@ -339,8 +458,11 @@ function openSupplierModal() {
                                 margin-bottom:7px;
                             "
                         >
+
                             Company
+
                         </label>
+
 
                         <input
                             type="text"
@@ -363,8 +485,11 @@ function openSupplierModal() {
                                 margin-bottom:7px;
                             "
                         >
+
                             Phone
+
                         </label>
+
 
                         <input
                             type="tel"
@@ -374,6 +499,7 @@ function openSupplierModal() {
                             placeholder="10-digit phone number"
                             style="${inputStyle()}"
                         >
+
 
                         <small
                             id="supplierPhoneError"
@@ -393,8 +519,11 @@ function openSupplierModal() {
                                 margin-bottom:7px;
                             "
                         >
+
                             Email
+
                         </label>
+
 
                         <input
                             type="email"
@@ -403,6 +532,7 @@ function openSupplierModal() {
                             placeholder="Enter email address"
                             style="${inputStyle()}"
                         >
+
 
                         <small
                             id="supplierEmailError"
@@ -422,8 +552,11 @@ function openSupplierModal() {
                                 margin-bottom:7px;
                             "
                         >
+
                             Address
+
                         </label>
+
 
                         <textarea
                             id="supplierAddress"
@@ -449,7 +582,9 @@ function openSupplierModal() {
                             cursor:pointer;
                         "
                     >
+
                         Add Supplier
+
                     </button>
 
                 </form>
@@ -457,6 +592,7 @@ function openSupplierModal() {
             </div>
 
         </div>
+
     `;
 
 
@@ -475,17 +611,23 @@ function openSupplierModal() {
 
 
     // Phone: allow digits only
+
     document
         .getElementById("supplierPhone")
-        .addEventListener("input", function () {
+        .addEventListener(
+            "input",
+            function () {
 
-            this.value = this.value
-                .replace(/\D/g, "")
-                .slice(0, 10);
+                this.value =
+                    this.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10);
 
-        });
+            }
+        );
 
 }
+
 
 
 // ===============================
@@ -495,7 +637,6 @@ function openSupplierModal() {
 async function handleSupplierSubmit(event) {
 
     event.preventDefault();
-
 
     clearErrors();
 
@@ -538,6 +679,7 @@ async function handleSupplierSubmit(event) {
     let valid = true;
 
 
+
     // ===========================
     // NAME VALIDATION
     // ===========================
@@ -577,7 +719,9 @@ async function handleSupplierSubmit(event) {
         );
 
         valid = false;
+
     }
+
 
 
     // ===========================
@@ -603,8 +747,11 @@ async function handleSupplierSubmit(event) {
             );
 
             valid = false;
+
         }
+
     }
+
 
 
     // ===========================
@@ -625,8 +772,11 @@ async function handleSupplierSubmit(event) {
             );
 
             valid = false;
+
         }
+
     }
+
 
 
     // ===========================
@@ -634,8 +784,11 @@ async function handleSupplierSubmit(event) {
     // ===========================
 
     if (!valid) {
+
         return;
+
     }
+
 
 
     // ===========================
@@ -643,7 +796,9 @@ async function handleSupplierSubmit(event) {
     // ===========================
 
     const submitButton =
-        event.target.querySelector("button[type='submit']");
+        event.target.querySelector(
+            "button[type='submit']"
+        );
 
 
     submitButton.disabled = true;
@@ -654,39 +809,60 @@ async function handleSupplierSubmit(event) {
 
     try {
 
-        const response = await fetch(
-            `${API_BASE}/suppliers/${ownerId}`,
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                `${API_BASE}/suppliers/${ownerId}`,
+                {
+                    method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                    headers: {
 
-                body: JSON.stringify({
-                    name: name,
-                    phone: phone || null,
-                    email: email || null,
-                    company: company || null,
-                    address: address || null
-                })
-            }
-        );
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        name: name,
+
+                        phone:
+                            phone || null,
+
+                        email:
+                            email || null,
+
+                        company:
+                            company || null,
+
+                        address:
+                            address || null
+
+                    })
+
+                }
+            );
 
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         if (!response.ok) {
 
             throw new Error(
+
                 data.detail ||
                 "Unable to create supplier."
+
             );
+
         }
 
 
-        alert("Supplier added successfully!");
+        alert(
+            "Supplier added successfully!"
+        );
 
 
         closeSupplierModal();
@@ -699,8 +875,10 @@ async function handleSupplierSubmit(event) {
         console.error(error);
 
         alert(
+
             error.message ||
             "Something went wrong."
+
         );
 
 
@@ -710,31 +888,48 @@ async function handleSupplierSubmit(event) {
 
         submitButton.textContent =
             "Add Supplier";
+
     }
+
 }
+
 
 
 // ===============================
 // ERROR HELPERS
 // ===============================
 
-function showError(elementId, message) {
+function showError(
+    elementId,
+    message
+) {
 
     const element =
-        document.getElementById(elementId);
+        document.getElementById(
+            elementId
+        );
+
 
     if (element) {
-        element.textContent = message;
+
+        element.textContent =
+            message;
+
     }
+
 }
 
 
 function clearErrors() {
 
     const errors = [
+
         "supplierNameError",
+
         "supplierPhoneError",
+
         "supplierEmailError"
+
     ];
 
 
@@ -743,12 +938,17 @@ function clearErrors() {
         const element =
             document.getElementById(id);
 
+
         if (element) {
+
             element.textContent = "";
+
         }
 
     });
+
 }
+
 
 
 // ===============================
@@ -758,12 +958,19 @@ function clearErrors() {
 function closeSupplierModal() {
 
     const modal =
-        document.getElementById("supplierModal");
+        document.getElementById(
+            "supplierModal"
+        );
+
 
     if (modal) {
+
         modal.remove();
+
     }
+
 }
+
 
 
 // ===============================
@@ -774,8 +981,11 @@ function logoutUser() {
 
     localStorage.clear();
 
-    window.location.href = "login.html";
+    window.location.href =
+        "login.html";
+
 }
+
 
 
 // ===============================
@@ -784,18 +994,30 @@ function logoutUser() {
 
 function escapeHTML(value) {
 
-    if (value === null || value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
         return "";
+
     }
 
 
     return String(value)
+
         .replace(/&/g, "&amp;")
+
         .replace(/</g, "&lt;")
+
         .replace(/>/g, "&gt;")
+
         .replace(/"/g, "&quot;")
+
         .replace(/'/g, "&#039;");
+
 }
+
 
 
 // ===============================
@@ -805,25 +1027,40 @@ function escapeHTML(value) {
 function inputStyle() {
 
     return `
+
         width:100%;
+
         padding:11px 12px;
+
         border:1px solid #dbe1ea;
+
         border-radius:9px;
+
         outline:none;
+
         font-size:14px;
+
     `;
+
 }
 
 
 function errorStyle() {
 
     return `
+
         display:block;
+
         color:#dc2626;
+
         font-size:12px;
+
         margin-top:5px;
+
     `;
+
 }
+
 
 
 // ===============================
