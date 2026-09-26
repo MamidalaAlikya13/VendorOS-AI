@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Product | VendorOS AI</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+
+    <style>
+        .product-page {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .product-header {
+            margin-bottom: 28px;
+        }
+
+        .product-header h2 {
+            font-size: 28px;
+            margin-bottom: 7px;
+        }
+
+        .product-header p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border: 1px solid #e5eaf1;
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(23, 32, 51, 0.05);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .product-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-field.full {
+            grid-column: 1 / -1;
+        }
+
+        .product-field label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .product-field input,
+        .product-field select {
+            padding: 13px 14px;
+            border: 1px solid #dbe1ea;
+            border-radius: 8px;
+            background: #fbfcfe;
+            color: #172033;
+            outline: none;
+        }
+
+        .product-field input:focus,
+        .product-field select:focus {
+            border-color: #2563eb;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+
+        .product-actions {
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid #edf0f4;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .cancel-button,
+        .save-product-button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .cancel-button {
+            border: 1px solid #dbe1ea;
+            background: #fff;
+            color: #475569;
+        }
+
+        .save-product-button {
+            border: none;
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .save-product-button:hover {
+            background: #1d4ed8;
+        }
+
+        #productMessage {
+            margin-top: 15px;
+            text-align: right;
+            font-size: 12px;
+            min-height: 18px;
+        }
+
+        @media (max-width: 700px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-field.full {
+                grid-column: auto;
+            }
+
+            .product-card {
+                padding: 20px;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .cancel-button,
+            .save-product-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            VendorOS <span>AI</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-item active">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+
+            <a href="inventory.html" class="nav-item">
+                <span>▣</span>
+                Inventory
+            </a>
+
+
+            <a href="sales.html" class="nav-item">
+                <span>▤</span>
+                Sales & Billing
+            </a>
+
+
+            <a href="customers.html" class="nav-item">
+                <span>♙</span>
+                Customers
+            </a>
+
+
+            <a href="suppliers.html" class="nav-item">
+                <span>♧</span>
+                Suppliers
+            </a>
+
+
+            <a href="ai-insights.html" class="nav-item">
+                <span>◈</span>
+                AI Insights
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="store.html" class="nav-item">
+                <span>⚙</span>
+                Store Settings
+            </a>
+
+            <button id="logoutButton" class="logout-button">
+                <span>↪</span>
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <p class="page-label">
+                    INVENTORY
+                </p>
+
+                <h1>Add Product</h1>
+            </div>
+
+            <div class="user-area">
+
+                <div class="user-info">
+
+                    <strong id="userName">User</strong>
+
+                    <span id="userRole">Retailer</span>
+
+                </div>
+
+                <div class="user-avatar" id="userAvatar">
+                    U
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <div class="product-page">
+
+            <div class="product-header">
+
+                <h2>Add a new product</h2>
+
+                <p>
+                    Enter your product information to add it to your inventory.
+                </p>
+
+            </div>
+
+
+            <form id="productForm" class="product-card" onsubmit="saveProduct(event)">
+
+                <div class="product-grid">
+
+                    <div class="product-field full">
+
+                        <label for="productName">
+                            Product Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="productName"
+                            placeholder="e.g. Paracetamol 500mg"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="product-field">
+
+                        <label for="category">
+                            Category
+                        </label>
+
+                        <select id="category" required>
+
+                            <option value="">
+                                Select category
+                            </option>
+
+                            <option value="Medicine">
+                                Medicine
+                            </option>
+
+                            <option value="Grocery">
+                                Grocery
+                            </option>
+
+                            <option value="Beverages">
+                                Beverages
+                            </option>
+
+                            <option value="Personal Care">
+                                Personal Care
+                            </option>
+
+                            <option value="Household">
+                                Household
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="product-field">
+
+                        <label for="sku">
+                            SKU / Product Code
+                        </label>
+
+                        <input
+                            type="text"
+                            id="sku"
+                            placeholder="Optional"
+                        >
+
+                    </div>
+
+
+                    <div class="product-field">
+
+                        <label for="purchasePrice">
+                            Purchase Price (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="purchasePrice"
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="product-field">
+
+                        <label for="sellingPrice">
+                            Selling Price (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="sellingPrice"
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="product-field">
+
+                        <label for="quantity">
+                            Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            id="quantity"
+                            min="0"
+                            placeholder="0"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="product-field">
+
+                        <label for="minimumStock">
+                            Minimum Stock Level
+                        </label>
+
+                        <input
+                            type="number"
+                            id="minimumStock"
+                            min="0"
+                            value="5"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="product-field">
+
+                        <label for="expiryDate">
+                            Expiry Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="expiryDate"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="product-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="window.location.href='inventory.html'"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="save-product-button"
+                    >
+                        Save Product
+                    </button>
+
+                </div>
+
+
+                <p id="productMessage"></p>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="dashboard.js"></script>
+<script src="product.js"></script>
+
+</body>
+
+</html>

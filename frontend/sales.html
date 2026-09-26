@@ -1,0 +1,826 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sales & Billing | VendorOS AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: #f6f8fc;
+            color: #0f172a;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            background: #0b1220;
+            color: #fff;
+            padding: 28px 18px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            padding: 0 14px 30px;
+        }
+
+        .logo span {
+            color: #3b82f6;
+        }
+
+        .nav-title {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 0 14px 10px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .sidebar-nav .nav-item {
+            text-decoration: none;
+            color: #94a3b8;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: #172033;
+            color: #fff;
+        }
+
+        .sidebar-nav .nav-item.active {
+            background: #1d4ed8;
+            color: #fff;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .logout-btn {
+            width: 100%;
+            border: 1px solid #263247;
+            background: transparent;
+            color: #cbd5e1;
+            padding: 11px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #172033;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 32px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+        }
+
+        .page-title p {
+            margin: 7px 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .user-pill {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 15px;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        /* POS */
+
+        .pos-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.8fr);
+            gap: 22px;
+            align-items: start;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e5eaf1;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.045);
+        }
+
+        .card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .card-header p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .sale-form {
+            padding: 24px;
+        }
+
+        .field {
+            margin-bottom: 19px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 7px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            height: 46px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            padding: 0 13px;
+            font-size: 14px;
+            color: #0f172a;
+            background: #fff;
+            outline: none;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+
+        .product-info {
+            display: none;
+            background: #f8fafc;
+            border: 1px solid #e7edf4;
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: -5px;
+            margin-bottom: 20px;
+        }
+
+        .product-info.visible {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .add-btn {
+            width: 100%;
+            height: 47px;
+            border: none;
+            border-radius: 10px;
+            background: #0f172a;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .add-btn:hover {
+            background: #1e293b;
+        }
+
+        /* CART */
+
+        .cart-card {
+            overflow: hidden;
+            position: sticky;
+            top: 25px;
+        }
+
+        .cart-content {
+            padding: 20px;
+        }
+
+        .empty-cart {
+            padding: 40px 15px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .empty-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 12px;
+            border-radius: 14px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .cart-item {
+            border: 1px solid #e7edf4;
+            border-radius: 12px;
+            padding: 13px;
+            margin-bottom: 10px;
+        }
+
+        .cart-item-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .cart-product {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .cart-price {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .cart-meta {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .remove-btn {
+            border: none;
+            background: #fef2f2;
+            color: #dc2626;
+            border-radius: 7px;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-top: 9px;
+        }
+
+        .customer-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #eef2f7;
+        }
+
+        .customer-section label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .customer-section input {
+            width: 100%;
+            height: 43px;
+            border: 1px solid #dbe2ea;
+            border-radius: 9px;
+            padding: 0 12px;
+            outline: none;
+        }
+
+        .summary {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #eef2f7;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .summary-row strong {
+            color: #334155;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 17px;
+            padding-top: 17px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .total-label {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .total-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            height: 48px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .checkout-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        #saleMessage {
+            margin-top: 14px;
+            font-size: 13px;
+            text-align: center;
+            min-height: 18px;
+        }
+
+        .success {
+            color: #16a34a;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        /* RECEIPT */
+
+        .receipt {
+            display: none;
+            margin-top: 22px;
+        }
+
+        .receipt.show {
+            display: block;
+        }
+
+        .receipt-inner {
+            padding: 24px;
+        }
+
+        .receipt-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .receipt-brand {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .receipt-brand span {
+            color: #2563eb;
+        }
+
+        .receipt-status {
+            background: #ecfdf5;
+            color: #15803d;
+            padding: 6px 9px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .receipt-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 8px 0;
+            color: #475569;
+        }
+
+        .receipt-total {
+            border-top: 1px dashed #cbd5e1;
+            margin-top: 10px;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        @media (max-width: 1050px) {
+            .pos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-card {
+                position: static;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                width: calc(100% - 210px);
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            VendorOS <span>AI</span>
+        </div>
+
+        <div class="nav-title">Workspace</div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-item">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+            <a href="inventory.html" class="nav-item">
+                <span>▣</span>
+                Inventory
+            </a>
+
+            <a href="sales.html" class="nav-item active">
+                <span>▤</span>
+                Sales & Billing
+            </a>
+
+            <a href="customers.html" class="nav-item">
+                <span>♙</span>
+                Customers
+            </a>
+
+            <a href="suppliers.html" class="nav-item">
+                <span>♧</span>
+                Suppliers
+            </a>
+
+            <a href="ai-insights.html" class="nav-item">
+                <span>◈</span>
+                AI Insights
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button class="logout-btn" onclick="logoutUser()">
+                Logout
+            </button>
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div class="page-title">
+                <h1>Sales & Billing</h1>
+                <p>Create invoices and complete customer purchases.</p>
+            </div>
+
+            <div class="user-pill" id="userPill">
+                VendorOS Retailer
+            </div>
+
+        </div>
+
+        <div class="pos-grid">
+
+            <!-- SALE CREATION -->
+
+            <section class="card">
+
+                <div class="card-header">
+                    <h2>New Sale</h2>
+                    <p>Add products to the current transaction.</p>
+                </div>
+
+                <form class="sale-form" id="saleForm">
+
+                    <div class="field">
+
+                        <label for="productSelect">
+                            Select Product
+                        </label>
+
+                        <select id="productSelect" required>
+
+                            <option value="">
+                                Choose a product
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="product-info" id="productInfo">
+
+                        <div>
+                            <div class="info-label">
+                                Selling Price
+                            </div>
+
+                            <div class="info-value" id="productPrice">
+                                ₹0.00
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="info-label">
+                                Available Stock
+                            </div>
+
+                            <div class="info-value" id="productStock">
+                                0
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="field">
+
+                            <label for="quantity">
+                                Quantity
+                            </label>
+
+                            <input
+                                type="number"
+                                id="quantity"
+                                min="1"
+                                value="1"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="customerName">
+                                Customer Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="customerName"
+                                placeholder="Optional"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="add-btn"
+                    >
+                        + Add to Cart
+                    </button>
+
+                </form>
+
+            </section>
+
+            <!-- CART -->
+
+            <section class="card cart-card">
+
+                <div class="card-header">
+
+                    <h2>Current Bill</h2>
+
+                    <p id="cartCount">
+                        0 items
+                    </p>
+
+                </div>
+
+                <div class="cart-content">
+
+                    <div id="cartItems">
+
+                        <div class="empty-cart">
+
+                            <div class="empty-icon">
+                                🛒
+                            </div>
+
+                            <div>
+                                Your bill is empty
+                            </div>
+
+                            <div style="margin-top:5px;">
+                                Add products to start a sale
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="customer-section">
+
+                        <label for="billCustomer">
+                            Customer
+                        </label>
+
+                        <input
+                            type="text"
+                            id="billCustomer"
+                            placeholder="Customer name"
+                        >
+
+                    </div>
+
+                    <div class="summary">
+
+                        <div class="summary-row">
+                            <span>Items</span>
+                            <strong id="summaryItems">0</strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <strong id="summarySubtotal">₹0.00</strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Discount</span>
+                            <strong>₹0.00</strong>
+                        </div>
+
+                        <div class="total-row">
+
+                            <span class="total-label">
+                                Total
+                            </span>
+
+                            <span
+                                class="total-value"
+                                id="summaryTotal"
+                            >
+                                ₹0.00
+                            </span>
+
+                        </div>
+
+                        <button
+                            class="checkout-btn"
+                            id="checkoutBtn"
+                            disabled
+                        >
+                            Complete Sale
+                        </button>
+
+                        <div id="saleMessage"></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- RECEIPT -->
+
+        <section class="card receipt" id="receipt">
+
+            <div class="receipt-inner">
+
+                <div class="receipt-head">
+
+                    <div>
+
+                        <div class="receipt-brand">
+                            VendorOS <span>AI</span>
+                        </div>
+
+                        <div
+                            style="color:#64748b;font-size:12px;margin-top:4px;"
+                        >
+                            Sales Receipt
+                        </div>
+
+                    </div>
+
+                    <div class="receipt-status">
+                        PAYMENT RECORDED
+                    </div>
+
+                </div>
+
+                <div id="receiptDetails"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="sales.js"></script>
+
+</body>
+</html>
+```
+
+**Important:** This version does **not** change your Sales & Billing layout/design. The only functional UI correction is that **Sales & Billing itself is highlighted as active**.

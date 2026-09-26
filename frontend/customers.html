@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Customers | VendorOS AI</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Inter, Arial, sans-serif;
+        background: #f6f8fc;
+        color: #172033;
+    }
+
+    .app {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+        width: 250px;
+        background: #0b1220;
+        color: white;
+        padding: 24px 16px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 12px 28px;
+    }
+
+    .brand-logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: linear-gradient(135deg, #4f7cff, #7c5cff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 18px;
+    }
+
+    .brand-text {
+        font-size: 18px;
+        font-weight: 750;
+    }
+
+    .brand-text span {
+        color: #6d8cff;
+    }
+
+    .nav-section {
+        margin-top: 10px;
+    }
+
+    .nav-label {
+        font-size: 11px;
+        color: #71809a;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 0 13px;
+        margin-bottom: 8px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 13px;
+        margin: 4px 0;
+        border-radius: 10px;
+        color: #9aa6bb;
+        text-decoration: none;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .nav-item:hover {
+        background: #151e31;
+        color: white;
+    }
+
+    .nav-item.active {
+        background: #1c2942;
+        color: white;
+    }
+
+    .nav-icon {
+        width: 20px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .sidebar-bottom {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 20px;
+    }
+
+    .logout {
+        cursor: pointer;
+    }
+
+    /* MAIN */
+
+    .main {
+        margin-left: 250px;
+        width: calc(100% - 250px);
+        padding: 34px 38px;
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        font-size: 29px;
+        font-weight: 750;
+        letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+        margin-top: 7px;
+        color: #7b879b;
+        font-size: 14px;
+    }
+
+    .user-pill {
+        background: white;
+        border: 1px solid #e7ebf2;
+        border-radius: 30px;
+        padding: 9px 15px;
+        font-size: 13px;
+        font-weight: 650;
+        box-shadow: 0 3px 12px rgba(20, 30, 50, 0.04);
+    }
+
+    /* SUMMARY */
+
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 24px;
+    }
+
+    .summary-card {
+        background: white;
+        border: 1px solid #e8ecf3;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(20, 30, 50, 0.04);
+    }
+
+    .summary-label {
+        font-size: 12px;
+        color: #7b879b;
+        margin-bottom: 8px;
+    }
+
+    .summary-value {
+        font-size: 26px;
+        font-weight: 750;
+    }
+
+    /* CUSTOMER CARD */
+
+    .customer-section {
+        background: white;
+        border: 1px solid #e7ebf2;
+        border-radius: 18px;
+        box-shadow: 0 5px 24px rgba(20, 30, 50, 0.04);
+        overflow: hidden;
+    }
+
+    .section-header {
+        padding: 22px 24px;
+        border-bottom: 1px solid #edf0f5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .section-title {
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .section-subtitle {
+        font-size: 12px;
+        color: #8a95a8;
+        margin-top: 4px;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .search-box {
+        width: 250px;
+        border: 1px solid #dfe5ee;
+        border-radius: 10px;
+        padding: 11px 13px;
+        outline: none;
+        font-size: 13px;
+        transition: 0.2s;
+    }
+
+    .search-box:focus {
+        border-color: #617eff;
+        box-shadow: 0 0 0 3px rgba(97, 126, 255, 0.1);
+    }
+
+    .add-btn {
+        border: none;
+        background: #526fff;
+        color: white;
+        padding: 11px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 650;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .add-btn:hover {
+        background: #405ce8;
+        transform: translateY(-1px);
+    }
+
+    /* TABLE */
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        text-align: left;
+        padding: 15px 24px;
+        background: #fafbfc;
+        color: #7c8799;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 650;
+    }
+
+    td {
+        padding: 17px 24px;
+        border-top: 1px solid #eef1f5;
+        font-size: 13px;
+        color: #4f5b70;
+    }
+
+    tr:hover td {
+        background: #fbfcff;
+    }
+
+    .customer-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #e9edff;
+        color: #526fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 750;
+        font-size: 13px;
+    }
+
+    .customer-name {
+        color: #172033;
+        font-weight: 650;
+    }
+
+    .customer-id {
+        font-size: 11px;
+        color: #98a1b1;
+        margin-top: 3px;
+    }
+
+    .phone {
+        color: #47546a;
+    }
+
+    .email {
+        color: #647086;
+    }
+
+    .empty-state,
+    .loading-state,
+    .error-state {
+        padding: 55px 20px;
+        text-align: center;
+        color: #8792a5;
+        font-size: 14px;
+    }
+
+    .error-state {
+        color: #dc2626;
+    }
+
+    /* MODAL */
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(8, 15, 28, 0.55);
+        backdrop-filter: blur(5px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+    }
+
+    .modal-overlay.show {
+        display: flex;
+    }
+
+    .modal {
+        width: 440px;
+        max-width: calc(100% - 30px);
+        background: white;
+        border-radius: 18px;
+        padding: 26px;
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+    }
+
+    .modal-title {
+        font-size: 19px;
+        font-weight: 750;
+    }
+
+    .close-btn {
+        border: none;
+        background: #f1f3f7;
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 650;
+        margin-bottom: 7px;
+        color: #49566b;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        border: 1px solid #dfe5ee;
+        border-radius: 10px;
+        padding: 11px 12px;
+        outline: none;
+        font-size: 13px;
+        font-family: inherit;
+    }
+
+    .form-group textarea {
+        min-height: 75px;
+        resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #617eff;
+        box-shadow: 0 0 0 3px rgba(97, 126, 255, 0.1);
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 22px;
+    }
+
+    .cancel-btn {
+        border: 1px solid #dfe5ee;
+        background: white;
+        padding: 11px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .save-btn {
+        border: none;
+        background: #526fff;
+        color: white;
+        padding: 11px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    .form-message {
+        font-size: 12px;
+        margin-top: 10px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+
+        .sidebar {
+            width: 210px;
+        }
+
+        .main {
+            margin-left: 210px;
+            width: calc(100% - 210px);
+            padding: 25px;
+        }
+
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .header-actions {
+            width: 100%;
+        }
+
+        .search-box {
+            flex: 1;
+        }
+    }
+
+    @media (max-width: 650px) {
+
+        .sidebar {
+            display: none;
+        }
+
+        .main {
+            margin-left: 0;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .topbar {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .header-actions {
+            flex-direction: column;
+        }
+
+        .search-box,
+        .add-btn {
+            width: 100%;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="app">
+
+```
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-logo">V</div>
+
+        <div class="brand-text">
+            VendorOS <span>AI</span>
+        </div>
+    </div>
+
+    <div class="nav-section">
+
+        <div class="nav-label">
+            Workspace
+        </div>
+
+        <a href="dashboard.html" class="nav-item">
+            <span class="nav-icon">▦</span>
+            Dashboard
+        </a>
+
+        <a href="inventory.html" class="nav-item">
+            <span class="nav-icon">▣</span>
+            Inventory
+        </a>
+
+        <a href="sales.html" class="nav-item">
+            <span class="nav-icon">▤</span>
+            Sales & Billing
+        </a>
+
+        <a href="customers.html" class="nav-item active">
+            <span class="nav-icon">♙</span>
+            Customers
+        </a>
+
+        <a href="suppliers.html" class="nav-item">
+            <span class="nav-icon">♧</span>
+            Suppliers
+        </a>
+
+        <a href="ai-insights.html" class="nav-item">
+            <span class="nav-icon">◈</span>
+            AI Insights
+        </a>
+
+    </div>
+
+    <div class="sidebar-bottom">
+
+        <div class="nav-item logout" id="logoutButton" onclick="logoutUser()">
+            <span class="nav-icon">↪</span>
+            Logout
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <h1 class="page-title">
+                Customers
+            </h1>
+
+            <p class="page-subtitle">
+                Manage customer relationships and purchase information.
+            </p>
+
+        </div>
+
+        <div class="user-pill" id="userPill">
+            VendorOS User
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                Total Customers
+            </div>
+
+            <div
+                class="summary-value"
+                id="totalCustomers"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                Customers With Email
+            </div>
+
+            <div
+                class="summary-value"
+                id="emailCustomers"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                Customers With Phone
+            </div>
+
+            <div
+                class="summary-value"
+                id="phoneCustomers"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CUSTOMER LIST -->
+
+    <section class="customer-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-title">
+                    Customer Directory
+                </div>
+
+                <div class="section-subtitle">
+                    Your saved customers
+                </div>
+
+            </div>
+
+
+            <div class="header-actions">
+
+                <input
+                    type="text"
+                    id="searchBox"
+                    class="search-box"
+                    placeholder="Search customers..."
+                >
+
+                <button
+                    class="add-btn"
+                    onclick="openCustomerModal()"
+                >
+                    + Add Customer
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Phone
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Address
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="customerTableBody">
+
+                </tbody>
+
+            </table>
+
+            <div
+                id="customerMessage"
+                class="loading-state"
+            >
+                Loading customers...
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+```
+
+</div>
+
+<!-- ADD CUSTOMER MODAL -->
+
+<div
+    class="modal-overlay"
+    id="customerModal"
+>
+
+```
+<div class="modal">
+
+    <div class="modal-header">
+
+        <div class="modal-title">
+            Add Customer
+        </div>
+
+        <button
+            class="close-btn"
+            onclick="closeCustomerModal()"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <form id="customerForm">
+
+        <div class="form-group">
+
+            <label>
+                Customer Name
+            </label>
+
+            <input
+                type="text"
+                id="customerName"
+                placeholder="Enter customer name"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Phone Number
+            </label>
+
+            <input
+                type="tel"
+                id="customerPhone"
+                placeholder="Enter 10-digit phone number"
+                maxlength="10"
+                pattern="[0-9]{10}"
+                inputmode="numeric"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="customerEmail"
+                placeholder="Enter email address"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Address
+            </label>
+
+            <textarea
+                id="customerAddress"
+                placeholder="Enter customer address"
+            ></textarea>
+
+        </div>
+
+
+        <div
+            id="formMessage"
+            class="form-message"
+        ></div>
+
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="cancel-btn"
+                onclick="closeCustomerModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+                Save Customer
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+```
+
+</div>
+
+<script src="customers.js"></script>
+
+</body>
+</html>

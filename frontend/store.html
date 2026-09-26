@@ -1,0 +1,600 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Store Setup | VendorOS AI</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f6f8fc;
+            color: #172033;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* LEFT PANEL */
+
+        .brand-panel {
+            width: 38%;
+            min-height: 100vh;
+            background: #172033;
+            color: white;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+
+        .logo span {
+            color: #60a5fa;
+        }
+
+        .brand-content {
+            max-width: 430px;
+            margin: auto 0;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            color: #bfdbfe;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            margin-bottom: 24px;
+        }
+
+        .brand-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: #60a5fa;
+            border-radius: 50%;
+        }
+
+        .brand-content h1 {
+            font-size: clamp(32px, 3.4vw, 48px);
+            line-height: 1.08;
+            letter-spacing: -1.8px;
+            margin-bottom: 20px;
+        }
+
+        .brand-content h1 span {
+            color: #60a5fa;
+        }
+
+        .brand-content p {
+            color: #aeb9ca;
+            font-size: 14px;
+            line-height: 1.8;
+            max-width: 390px;
+        }
+
+        .brand-footer {
+            color: #7f8ba0;
+            font-size: 11px;
+        }
+
+
+        /* RIGHT PANEL */
+
+        .form-panel {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 35px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 590px;
+        }
+
+
+        /* STEP */
+
+        .step-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .step-text {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+
+        /* HEADER */
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            font-size: 30px;
+            letter-spacing: -1px;
+            margin-bottom: 9px;
+        }
+
+        .form-header p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+
+        /* FORM CARD */
+
+        .form-card {
+            background: white;
+            border: 1px solid #e5eaf1;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 14px 40px rgba(23, 32, 51, 0.06);
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            font-size: 12px;
+            font-weight: 650;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            border: 1px solid #dbe1ea;
+            border-radius: 9px;
+            padding: 13px 14px;
+            background: #fbfcfe;
+            color: #172033;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: 0.18s ease;
+        }
+
+        .field textarea {
+            min-height: 92px;
+            resize: vertical;
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder {
+            color: #9aa5b5;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+
+        .field-hint {
+            margin-top: 6px;
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+
+        /* BUTTON */
+
+        .form-footer {
+            margin-top: 26px;
+            padding-top: 22px;
+            border-top: 1px solid #edf0f4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .secure-text {
+            color: #94a3b8;
+            font-size: 10px;
+        }
+
+        .save-button {
+            border: none;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            padding: 13px 23px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .save-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+        }
+
+        .store-message {
+            margin-top: 15px;
+            min-height: 18px;
+            font-size: 12px;
+            text-align: right;
+        }
+
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .brand-panel {
+                width: 34%;
+                padding: 32px;
+            }
+
+            .brand-content h1 {
+                font-size: 32px;
+            }
+
+            .form-panel {
+                padding: 35px 25px;
+            }
+        }
+
+
+        @media (max-width: 700px) {
+
+            .page {
+                display: block;
+            }
+
+            .brand-panel {
+                width: 100%;
+                min-height: auto;
+                padding: 28px 24px;
+            }
+
+            .brand-content {
+                margin: 55px 0 25px;
+            }
+
+            .brand-content h1 {
+                font-size: 34px;
+            }
+
+            .brand-footer {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 28px 18px 45px;
+            }
+
+            .form-card {
+                padding: 22px;
+            }
+
+            .field-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .form-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .save-button {
+                width: 100%;
+            }
+
+            .secure-text {
+                text-align: center;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+
+    <!-- BRAND PANEL -->
+
+    <section class="brand-panel">
+
+        <div class="logo">
+            VendorOS <span>AI</span>
+        </div>
+
+
+        <div class="brand-content">
+
+            <div class="brand-badge">
+                <span class="brand-badge-dot"></span>
+                BUSINESS SETUP
+            </div>
+
+
+            <h1>
+                Build your store's
+                <span>digital workspace.</span>
+            </h1>
+
+
+            <p>
+                Tell us about your business. Your store information
+                will be used to personalize your VendorOS AI workspace
+                and keep your business data organized.
+            </p>
+
+        </div>
+
+
+        <div class="brand-footer">
+            Your business data stays connected to your account.
+        </div>
+
+    </section>
+
+
+    <!-- FORM PANEL -->
+
+    <section class="form-panel">
+
+        <div class="form-container">
+
+
+            <div class="step-row">
+
+                <div class="step-number">
+                    1
+                </div>
+
+                <div class="step-text">
+                    STORE INFORMATION
+                </div>
+
+            </div>
+
+
+            <div class="form-header">
+
+                <h2>
+                    Tell us about your store
+                </h2>
+
+                <p>
+                    Add your business details below. You can edit them
+                    anytime from your dashboard.
+                </p>
+
+            </div>
+
+
+            <form id="storeForm" class="form-card">
+
+
+                <div class="field-grid">
+
+
+                    <div class="field full">
+
+                        <label for="storeName">
+                            Store Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="storeName"
+                            placeholder="e.g. Sri Lakshmi Pharmacy"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="businessType">
+                            Business Type
+                        </label>
+
+                        <select id="businessType" required>
+
+                            <option value="">
+                                Select type
+                            </option>
+
+                            <option value="Pharmacy">
+                                Pharmacy
+                            </option>
+
+                            <option value="Grocery">
+                                Grocery Store
+                            </option>
+
+                            <option value="Retail">
+                                Retail Shop
+                            </option>
+
+                            <option value="Supermarket">
+                                Supermarket
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="phone">
+                            Business Phone
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            placeholder="+91 XXXXX XXXXX"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="email">
+                            Business Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="store@example.com"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="ownerName">
+                            Account Owner
+                        </label>
+
+                        <input
+                            type="text"
+                            id="ownerName"
+                            readonly
+                            placeholder="Your account name"
+                        >
+
+                        <span class="field-hint">
+                            Linked automatically to your account.
+                        </span>
+
+                    </div>
+
+
+                    <div class="field full">
+
+                        <label for="address">
+                            Business Address
+                        </label>
+
+                        <textarea
+                            id="address"
+                            placeholder="Enter your complete business address"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-footer">
+
+                    <span class="secure-text">
+                        🔒 Your store information is linked to your account.
+                    </span>
+
+                    <button
+                        type="submit"
+                        class="save-button"
+                    >
+                        Save &amp; Continue
+                    </button>
+
+                </div>
+
+
+                <p
+                    id="storeMessage"
+                    class="store-message"
+                ></p>
+
+
+            </form>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script src="store.js"></script>
+
+</body>
+
+</html>
+```

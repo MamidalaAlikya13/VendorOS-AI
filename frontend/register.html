@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | VendorOS AI</title>
+
+    <link rel="stylesheet" href="auth.css">
+</head>
+
+<body>
+
+    <div class="auth-page">
+
+        <!-- LEFT SIDE -->
+        <div class="auth-brand">
+
+            <a href="index.html" class="brand-logo">
+                VendorOS <span>AI</span>
+            </a>
+
+            <div class="brand-content">
+
+                <p class="eyebrow">
+                    SMART RETAIL MANAGEMENT
+                </p>
+
+                <h1>
+                    Build a smarter
+                    <span>retail business.</span>
+                </h1>
+
+                <p class="brand-description">
+                    Create your VendorOS AI account and bring
+                    inventory, billing, sales, customers and
+                    suppliers together in one platform.
+                </p>
+
+                <div class="feature-line">
+                    <span>✓</span>
+                    One platform for your retail operations
+                </div>
+
+                <div class="feature-line">
+                    <span>✓</span>
+                    AI-powered business insights
+                </div>
+
+                <div class="feature-line">
+                    <span>✓</span>
+                    Simple and secure management
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="auth-container">
+
+            <div class="auth-card">
+
+                <!-- MOBILE LOGO -->
+                <div class="mobile-logo">
+                    VendorOS <span>AI</span>
+                </div>
+
+
+                <!-- HEADING -->
+                <div class="auth-heading">
+
+                    <h2>
+                        Create your account
+                    </h2>
+
+                    <p>
+                        Get started with VendorOS AI
+                    </p>
+
+                </div>
+
+
+                <!-- REGISTER FORM -->
+                <form id="registerForm">
+
+                    <!-- NAME -->
+                    <div class="form-group">
+
+                        <label for="name">
+                            Full name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="Enter your full name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Create a password"
+                                required
+                                minlength="6"
+                            >
+
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="eye-button"
+                                aria-label="Show password"
+                            >
+                                👁
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+                            Confirm password
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Confirm your password"
+                                required
+                                minlength="6"
+                            >
+
+                            <button
+                                type="button"
+                                id="toggleConfirmPassword"
+                                class="eye-button"
+                                aria-label="Show password"
+                            >
+                                👁
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ROLE -->
+                    <div class="form-group">
+
+                        <label for="role">
+                            Account type
+                        </label>
+
+                        <select id="role" class="auth-select">
+
+                            <option value="retailer">
+                                Retailer
+                            </option>
+
+                            <option value="admin">
+                                Administrator
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+                    <button
+                        type="submit"
+                        class="login-button"
+                    >
+                        Create Account
+                    </button>
+
+
+                    <!-- MESSAGE -->
+                    <p
+                        id="registerMessage"
+                        class="login-message"
+                    ></p>
+
+                </form>
+
+
+                <!-- DIVIDER -->
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+
+                <!-- LOGIN -->
+                <p class="register-text">
+
+                    Already have an account?
+
+                    <a href="login.html">
+                        Sign in
+                    </a>
+
+                </p>
+
+
+                <!-- HOME -->
+                <a
+                    href="index.html"
+                    class="back-home"
+                >
+                    ← Back to VendorOS AI
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="register.js"></script>
+
+</body>
+</html>

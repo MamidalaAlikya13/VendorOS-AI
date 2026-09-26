@@ -1,0 +1,551 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | VendorOS AI</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            VendorOS <span>AI</span>
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-item active">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+
+            <a href="inventory.html" class="nav-item">
+                <span>▣</span>
+                Inventory
+            </a>
+
+
+            <a href="sales.html" class="nav-item">
+                <span>▤</span>
+                Sales & Billing
+            </a>
+
+
+            <a href="customers.html" class="nav-item">
+                <span>♙</span>
+                Customers
+            </a>
+
+
+            <a href="suppliers.html" class="nav-item">
+                <span>♧</span>
+                Suppliers
+            </a>
+
+
+            <a href="ai-insights.html" class="nav-item">
+                <span>◈</span>
+                AI Insights
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="settings.html" class="nav-item">
+                <span>⚙</span>
+                Settings
+            </a>
+
+
+            <button
+                id="logoutButton"
+                class="logout-button"
+                type="button"
+            >
+                <span>↪</span>
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="page-label">
+                    BUSINESS OVERVIEW
+                </p>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <div class="user-info">
+
+                    <strong id="userName">
+                        User
+                    </strong>
+
+                    <span id="userRole">
+                        Retailer
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="user-avatar"
+                    id="userAvatar"
+                >
+                    U
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================
+             WELCOME SECTION
+        ========================== -->
+
+        <section class="welcome-section">
+
+            <div>
+
+                <h2>
+                    Welcome back,
+                    <span id="welcomeName">
+                        there
+                    </span>.
+                </h2>
+
+
+                <p>
+                    Your business dashboard will show real data
+                    as you add products and record sales.
+                </p>
+
+            </div>
+
+
+            <button
+                class="primary-button"
+                type="button"
+                onclick="window.location.href='product.html'"
+            >
+                + Add Product
+            </button>
+
+        </section>
+
+
+
+        <!-- =========================
+             STATISTICS
+        ========================== -->
+
+        <section class="stats-grid">
+
+
+            <!-- REVENUE -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>
+                        Total Revenue
+                    </span>
+
+                    <div class="stat-icon">
+                        ₹
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    ₹0
+                </h3>
+
+
+                <p class="neutral">
+                    No sales recorded yet
+                </p>
+
+            </div>
+
+
+
+            <!-- PRODUCTS -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>
+                        Total Products
+                    </span>
+
+                    <div class="stat-icon">
+                        ▦
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    0
+                </h3>
+
+
+                <p class="neutral">
+                    No products added yet
+                </p>
+
+            </div>
+
+
+
+            <!-- ORDERS -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>
+                        Total Orders
+                    </span>
+
+                    <div class="stat-icon">
+                        ▤
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    0
+                </h3>
+
+
+                <p class="neutral">
+                    No orders recorded yet
+                </p>
+
+            </div>
+
+
+
+            <!-- LOW STOCK -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>
+                        Low Stock Items
+                    </span>
+
+                    <div class="stat-icon warning">
+                        !
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    0
+                </h3>
+
+
+                <p class="neutral">
+                    No inventory data yet
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             MAIN DASHBOARD GRID
+        ========================== -->
+
+        <section class="dashboard-grid">
+
+
+            <!-- =====================
+                 SALES OVERVIEW
+            ====================== -->
+
+            <div class="dashboard-card sales-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+                            Sales Overview
+                        </h3>
+
+
+                        <p>
+                            Sales data will appear here
+                            after transactions are recorded.
+                        </p>
+
+                    </div>
+
+
+                    <select disabled>
+
+                        <option>
+                            Last 7 days
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div class="empty-chart">
+
+                    <div class="empty-chart-icon">
+                        ▥
+                    </div>
+
+
+                    <h4>
+                        No sales data yet
+                    </h4>
+
+
+                    <p>
+                        Record your first sale to start
+                        tracking business performance.
+                    </p>
+
+
+                    <button
+                        class="secondary-button"
+                        type="button"
+                        onclick="window.location.href='sales.html'"
+                    >
+                        Create First Sale
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =====================
+                 AI INSIGHTS
+            ====================== -->
+
+            <div class="dashboard-card ai-card">
+
+                <div class="ai-heading">
+
+                    <div class="ai-icon">
+                        ✦
+                    </div>
+
+
+                    <div>
+
+                        <h3>
+                            AI Business Insights
+                        </h3>
+
+
+                        <p>
+                            VendorOS intelligence
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="ai-empty">
+
+                    <h4>
+                        Insights will appear here
+                    </h4>
+
+
+                    <p>
+                        Add products and record sales.
+                        VendorOS AI will analyze your actual
+                        business data and generate useful insights.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             BOTTOM GRID
+        ========================== -->
+
+        <section class="bottom-grid">
+
+
+            <!-- =====================
+                 RECENT ORDERS
+            ====================== -->
+
+            <div class="dashboard-card orders-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+                            Recent Orders
+                        </h3>
+
+
+                        <p>
+                            Your latest transactions
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ▤
+                    </div>
+
+
+                    <h4>
+                        No orders yet
+                    </h4>
+
+
+                    <p>
+                        Your completed and pending orders
+                        will appear here.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =====================
+                 ALERTS
+            ====================== -->
+
+            <div class="dashboard-card alerts-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+                            Alerts
+                        </h3>
+
+
+                        <p>
+                            Inventory and business notifications
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ✓
+                    </div>
+
+
+                    <h4>
+                        No alerts
+                    </h4>
+
+
+                    <p>
+                        Alerts will appear when VendorOS
+                        detects something that needs attention.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================
+     DASHBOARD JAVASCRIPT
+========================== -->
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
+```
