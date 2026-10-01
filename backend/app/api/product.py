@@ -84,3 +84,67 @@ def get_products(
         }
         for product in products
     ]
+
+
+@router.put("/{owner_id}/{product_id}")
+def update_product(
+    owner_id: int,
+    product_id: int,
+    product_data: dict,
+    db: Session = Depends(get_db)
+):
+
+    product = db.query(Product).filter(
+        Product.id == product_id,
+        Product.owner_id == owner_id
+    ).first()
+
+    if not product:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
+
+    product.product_name = product_data["product_name"]
+    product.category = product_data["category"]
+    product.sku = product_data.get("sku")
+    product.purchase_price = product_data["purchase_price"]
+    product.selling_price = product_data["selling_price"]
+    product.quantity = product_data["quantity"]
+    product.minimum_stock = product_data["minimum_stock"]
+    product.expiry_date = product_data.get("expiry_date")
+
+    db.commit()
+    db.refresh(product)
+
+    return {
+        "message": "Product updated successfully",
+        "product_id": product.id
+    }
+
+
+@router.delete("/{owner_id}/{product_id}")
+def delete_product(
+    owner_id: int,
+    product_id: int,
+    db: Session = Depends(get_db)
+):
+
+    product = db.query(Product).filter(
+        Product.id == product_id,
+        Product.owner_id == owner_id
+    ).first()
+
+    if not product:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
+
+    db.delete(product)
+    db.commit()
+
+    return {
+        "message": "Product removed successfully",
+        "product_id": product_id
+    }
