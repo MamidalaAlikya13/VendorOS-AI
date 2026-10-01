@@ -225,6 +225,9 @@ async function loadInventory() {
             let expiryDateText =
                 "-";
 
+            let potentialLoss =
+                0;
+
 
             if (product.expiry_date) {
 
@@ -262,7 +265,9 @@ async function loadInventory() {
                     product.expiry_date;
 
 
+                // =================================
                 // EXPIRED
+                // =================================
 
                 if (daysRemaining < 0) {
 
@@ -273,7 +278,21 @@ async function loadInventory() {
                         "Expired";
 
 
+                    // Potential Loss
+                    // = Quantity × Purchase Price
+
+                    potentialLoss =
+                        Number(
+                            product.quantity || 0
+                        ) *
+                        Number(
+                            product.purchase_price || 0
+                        );
+
+
+                // =================================
                 // 1-30 DAYS
+                // =================================
 
                 } else if (
                     daysRemaining <= 30
@@ -290,7 +309,9 @@ async function loadInventory() {
                         } left`;
 
 
+                // =================================
                 // 31-90 DAYS
+                // =================================
 
                 } else if (
                     daysRemaining <= 90
@@ -303,7 +324,9 @@ async function loadInventory() {
                         `${daysRemaining} days left`;
 
 
+                // =================================
                 // MORE THAN 90 DAYS
+                // =================================
 
                 } else {
 
@@ -396,6 +419,24 @@ async function loadInventory() {
                         >
                             ${expiryDateText}
                         </small>
+
+
+                        ${
+                            potentialLoss > 0
+                                ? `
+                                    <small
+                                        style="
+                                            color:#dc2626;
+                                            font-size:10px;
+                                            font-weight:600;
+                                        "
+                                    >
+                                        Potential Loss:
+                                        ₹${potentialLoss.toFixed(2)}
+                                    </small>
+                                `
+                                : ""
+                        }
 
                     </div>
 

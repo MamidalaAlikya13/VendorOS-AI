@@ -412,6 +412,13 @@ function updateAIInsights(
     let lowStock = 0;
     let outOfStock = 0;
 
+    let expiredStockLoss = 0;
+    let expiredProductCount = 0;
+
+
+    // =================================
+    // INVENTORY ANALYSIS
+    // =================================
 
     products.forEach(function (product) {
 
@@ -426,6 +433,8 @@ function updateAIInsights(
             );
 
 
+        // Stock status
+
         if (quantity <= 0) {
 
             outOfStock++;
@@ -436,16 +445,71 @@ function updateAIInsights(
 
             lowStock++;
         }
+
+
+        // =================================
+        // EXPIRED STOCK LOSS
+        // =================================
+
+        if (product.expiry_date) {
+
+            const expiryDate =
+                new Date(
+                    product.expiry_date +
+                    "T00:00:00"
+                );
+
+
+            const today =
+                new Date();
+
+            today.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            if (expiryDate < today) {
+
+                const purchasePrice =
+                    Number(
+                        product.purchase_price || 0
+                    );
+
+
+                const productLoss =
+                    quantity *
+                    purchasePrice;
+
+
+                expiredStockLoss +=
+                    productLoss;
+
+
+                expiredProductCount++;
+            }
+        }
     });
 
 
     let message = "";
 
 
+    // =================================
+    // AI INSIGHT MESSAGE
+    // =================================
+
     if (products.length === 0) {
 
         message =
             "Add products to start receiving inventory insights.";
+
+    } else if (expiredProductCount > 0) {
+
+        message =
+            `${expiredProductCount} expired product(s) identified with ${formatCurrency(expiredStockLoss)} potential inventory loss.`;
 
     } else if (outOfStock > 0) {
 
@@ -468,6 +532,10 @@ function updateAIInsights(
             "Your store is ready. Record sales to generate business insights.";
     }
 
+
+    // =================================
+    // EXISTING AI INSIGHTS UI
+    // =================================
 
     aiEmpty.innerHTML = `
 
