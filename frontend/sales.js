@@ -10,6 +10,9 @@ const productSelect = document.getElementById("productSelect");
 const quantityInput = document.getElementById("quantity");
 const customerNameInput = document.getElementById("customerName");
 
+const productSearch = document.getElementById("productSearch");
+const discountPercentInput = document.getElementById("discountPercent");
+
 const productInfo = document.getElementById("productInfo");
 const productPrice = document.getElementById("productPrice");
 const productStock = document.getElementById("productStock");
@@ -23,6 +26,7 @@ const billCustomer = document.getElementById("billCustomer");
 
 const summaryItems = document.getElementById("summaryItems");
 const summarySubtotal = document.getElementById("summarySubtotal");
+const summaryDiscount = document.getElementById("summaryDiscount");
 const summaryTotal = document.getElementById("summaryTotal");
 
 const checkoutBtn = document.getElementById("checkoutBtn");
@@ -36,6 +40,7 @@ const userPill = document.getElementById("userPill");
 
 let products = [];
 let cart = [];
+let discountPercent = 0;
 
 
 /* USER */
@@ -65,24 +70,7 @@ async function loadProducts() {
 
         products = data;
 
-        productSelect.innerHTML = `
-            <option value="">
-                Choose a product
-            </option>
-        `;
-
-        products.forEach(product => {
-
-            const option = document.createElement("option");
-
-            option.value = product.id;
-
-            option.textContent =
-                `${product.product_name} — ₹${Number(product.selling_price).toFixed(2)} — ${product.quantity} in stock`;
-
-            productSelect.appendChild(option);
-
-        });
+        populateProductSelect(products);
 
     } catch (error) {
 
@@ -93,6 +81,98 @@ async function loadProducts() {
 
         saleMessage.className = "error";
     }
+}
+
+
+/* POPULATE PRODUCT DROPDOWN */
+
+function populateProductSelect(productList) {
+
+    productSelect.innerHTML = `
+        <option value="">
+            Choose a product
+        </option>
+    `;
+
+    productList.forEach(product => {
+
+        const option = document.createElement("option");
+
+        option.value = product.id;
+
+        option.textContent =
+            `${product.product_name} — ₹${Number(product.selling_price).toFixed(2)} — ${product.quantity} in stock`;
+
+        productSelect.appendChild(option);
+
+    });
+}
+
+
+/* PRODUCT SEARCH
+   Search by Product Name or SKU
+*/
+
+if (productSearch) {
+
+    productSearch.addEventListener(
+        "input",
+        function () {
+
+            const searchValue =
+                productSearch.value.trim().toLowerCase();
+
+            if (!searchValue) {
+
+                populateProductSelect(products);
+
+                productSelect.value = "";
+
+                productInfo.classList.remove("visible");
+
+                return;
+            }
+
+            const filteredProducts =
+                products.filter(product => {
+
+                    const productName =
+                        String(product.product_name || "")
+                            .toLowerCase();
+
+                    const sku =
+                        String(product.sku || "")
+                            .toLowerCase();
+
+                    return (
+                        productName.includes(searchValue) ||
+                        sku.includes(searchValue)
+                    );
+
+                });
+
+            populateProductSelect(filteredProducts);
+
+            if (filteredProducts.length === 1) {
+
+                productSelect.value =
+                    filteredProducts[0].id;
+
+                productSelect.dispatchEvent(
+                    new Event("change")
+                );
+
+            } else {
+
+                productSelect.value = "";
+
+                productInfo.classList.remove("visible");
+
+            }
+
+        }
+    );
+
 }
 
 
@@ -226,6 +306,9 @@ saleForm.addEventListener(
 
                 product_name:
                     product.product_name,
+
+                sku:
+                    product.sku || "",
 
                 unit_price:
                     Number(product.selling_price),
@@ -368,6 +451,40 @@ function removeFromCart(index) {
 }
 
 
+/* DISCOUNT */
+
+if (discountPercentInput) {
+
+    discountPercentInput.addEventListener(
+        "input",
+        function () {
+
+            let value =
+                Number(discountPercentInput.value);
+
+            if (Number.isNaN(value)) {
+                value = 0;
+            }
+
+            if (value < 0) {
+                value = 0;
+            }
+
+            if (value > 100) {
+                value = 100;
+            }
+
+            discountPercent =
+                value;
+
+            updateSummary();
+
+        }
+    );
+
+}
+
+
 /* SUMMARY */
 
 function updateSummary() {
@@ -389,17 +506,46 @@ function updateSummary() {
         );
 
 
+    /* Calculate discount */
+
+    let discountAmount =
+        subtotal *
+        (discountPercent / 100);
+
+
+    /* Prevent floating-point display issues */
+
+    discountAmount =
+        Number(discountAmount.toFixed(2));
+
+
+    const finalTotal =
+        subtotal -
+        discountAmount;
+
+
     cartCount.textContent =
         `${totalItems} ${totalItems === 1 ? "item" : "items"}`;
+
 
     summaryItems.textContent =
         totalItems;
 
+
     summarySubtotal.textContent =
         `₹${subtotal.toFixed(2)}`;
 
+
+    if (summaryDiscount) {
+
+        summaryDiscount.textContent =
+            `₹${discountAmount.toFixed(2)}`;
+
+    }
+
+
     summaryTotal.textContent =
-        `₹${subtotal.toFixed(2)}`;
+        `₹${finalTotal.toFixed(2)}`;
 }
 
 
@@ -410,6 +556,22 @@ checkoutBtn.addEventListener(
     async function () {
 
         if (cart.length === 0) {
+            return;
+        }
+
+
+        /* Validate discount */
+
+        if (
+            discountPercent < 0 ||
+            discountPercent > 100
+        ) {
+
+            showMessage(
+                "Discount must be between 0% and 100%.",
+                "error"
+            );
+
             return;
         }
 
@@ -478,6 +640,14 @@ checkoutBtn.addEventListener(
             }
 
 
+            /*
+             * Backend sales are recorded using the
+             * original product prices.
+             *
+             * Discount is applied to the final
+             * bill amount shown to the customer.
+             */
+
             showReceipt(
                 completedSales,
                 customerName
@@ -487,6 +657,12 @@ checkoutBtn.addEventListener(
             cart = [];
 
             billCustomer.value = "";
+
+            if (discountPercentInput) {
+                discountPercentInput.value = "";
+            }
+
+            discountPercent = 0;
 
             renderCart();
 
@@ -527,12 +703,22 @@ function showReceipt(
     customerName
 ) {
 
-    const total =
+    const subtotal =
         completedSales.reduce(
             (sum, sale) =>
                 sum + Number(sale.total_amount),
             0
         );
+
+
+    const discountAmount =
+        subtotal *
+        (discountPercent / 100);
+
+
+    const finalTotal =
+        subtotal -
+        discountAmount;
 
 
     const now =
@@ -542,20 +728,35 @@ function showReceipt(
     receiptDetails.innerHTML = `
 
         <div class="receipt-line">
-            <span>Customer</span>
+
+            <span>
+                Customer
+            </span>
+
             <strong>
                 ${customerName || "Walk-in Customer"}
             </strong>
+
         </div>
 
+
         <div class="receipt-line">
-            <span>Date</span>
-            <strong>${now}</strong>
+
+            <span>
+                Date
+            </span>
+
+            <strong>
+                ${now}
+            </strong>
+
         </div>
+
 
         ${completedSales.map(sale => `
 
             <div class="receipt-line">
+
                 <span>
                     ${sale.product_name}
                     × ${sale.quantity}
@@ -566,16 +767,46 @@ function showReceipt(
                         sale.total_amount
                     ).toFixed(2)}
                 </strong>
+
             </div>
 
         `).join("")}
 
-        <div class="receipt-total">
 
-            <span>Total Paid</span>
+        <div class="receipt-line">
 
             <span>
-                ₹${total.toFixed(2)}
+                Subtotal
+            </span>
+
+            <strong>
+                ₹${subtotal.toFixed(2)}
+            </strong>
+
+        </div>
+
+
+        <div class="receipt-line">
+
+            <span>
+                Discount (${discountPercent}%)
+            </span>
+
+            <strong>
+                -₹${discountAmount.toFixed(2)}
+            </strong>
+
+        </div>
+
+
+        <div class="receipt-total">
+
+            <span>
+                Total Paid
+            </span>
+
+            <span>
+                ₹${finalTotal.toFixed(2)}
             </span>
 
         </div>

@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -257,6 +256,26 @@
             background: #1e293b;
         }
 
+        /* SEARCH */
+
+        .search-wrap {
+            position: relative;
+        }
+
+        .search-wrap input {
+            padding-right: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
         /* CART */
 
         .cart-card {
@@ -360,6 +379,7 @@
         .summary-row {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 12px;
             font-size: 13px;
             color: #64748b;
@@ -367,6 +387,40 @@
 
         .summary-row strong {
             color: #334155;
+        }
+
+        .discount-control {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .discount-input {
+            width: 70px;
+            height: 34px;
+            border: 1px solid #dbe2ea;
+            border-radius: 8px;
+            padding: 0 8px;
+            text-align: right;
+            outline: none;
+            font-size: 13px;
+            color: #0f172a;
+        }
+
+        .discount-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+
+        .discount-symbol {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .discount-amount {
+            color: #16a34a !important;
+            min-width: 75px;
+            text-align: right;
         }
 
         .total-row {
@@ -508,6 +562,11 @@
             .form-row {
                 grid-template-columns: 1fr;
             }
+
+            .summary-row {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
         }
     </style>
 </head>
@@ -559,40 +618,98 @@
         </nav>
 
         <div class="sidebar-bottom">
-            <button class="logout-btn" onclick="logoutUser()">
+
+            <button
+                class="logout-btn"
+                onclick="logoutUser()"
+            >
                 Logout
             </button>
+
         </div>
 
     </aside>
+
 
     <main class="main">
 
         <div class="topbar">
 
             <div class="page-title">
-                <h1>Sales & Billing</h1>
-                <p>Create invoices and complete customer purchases.</p>
+
+                <h1>
+                    Sales & Billing
+                </h1>
+
+                <p>
+                    Create invoices and complete customer purchases.
+                </p>
+
             </div>
 
-            <div class="user-pill" id="userPill">
+            <div
+                class="user-pill"
+                id="userPill"
+            >
                 VendorOS Retailer
             </div>
 
         </div>
 
+
         <div class="pos-grid">
+
 
             <!-- SALE CREATION -->
 
             <section class="card">
 
                 <div class="card-header">
-                    <h2>New Sale</h2>
-                    <p>Add products to the current transaction.</p>
+
+                    <h2>
+                        New Sale
+                    </h2>
+
+                    <p>
+                        Add products to the current transaction.
+                    </p>
+
                 </div>
 
-                <form class="sale-form" id="saleForm">
+
+                <form
+                    class="sale-form"
+                    id="saleForm"
+                >
+
+
+                    <!-- PRODUCT SEARCH -->
+
+                    <div class="field">
+
+                        <label for="productSearch">
+                            Search Product
+                        </label>
+
+                        <div class="search-wrap">
+
+                            <input
+                                type="text"
+                                id="productSearch"
+                                placeholder="Search by product name or SKU/code..."
+                                autocomplete="off"
+                            >
+
+                            <span class="search-icon">
+                                🔍
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PRODUCT SELECT -->
 
                     <div class="field">
 
@@ -600,7 +717,10 @@
                             Select Product
                         </label>
 
-                        <select id="productSelect" required>
+                        <select
+                            id="productSelect"
+                            required
+                        >
 
                             <option value="">
                                 Choose a product
@@ -610,31 +730,52 @@
 
                     </div>
 
-                    <div class="product-info" id="productInfo">
+
+                    <!-- PRODUCT INFO -->
+
+                    <div
+                        class="product-info"
+                        id="productInfo"
+                    >
 
                         <div>
+
                             <div class="info-label">
                                 Selling Price
                             </div>
 
-                            <div class="info-value" id="productPrice">
+                            <div
+                                class="info-value"
+                                id="productPrice"
+                            >
                                 ₹0.00
                             </div>
+
                         </div>
 
+
                         <div>
+
                             <div class="info-label">
                                 Available Stock
                             </div>
 
-                            <div class="info-value" id="productStock">
+                            <div
+                                class="info-value"
+                                id="productStock"
+                            >
                                 0
                             </div>
+
                         </div>
 
                     </div>
 
+
+                    <!-- QUANTITY + CUSTOMER -->
+
                     <div class="form-row">
+
 
                         <div class="field">
 
@@ -652,6 +793,7 @@
 
                         </div>
 
+
                         <div class="field">
 
                             <label for="customerName">
@@ -666,7 +808,9 @@
 
                         </div>
 
+
                     </div>
+
 
                     <button
                         type="submit"
@@ -675,17 +819,22 @@
                         + Add to Cart
                     </button>
 
+
                 </form>
 
             </section>
+
 
             <!-- CART -->
 
             <section class="card cart-card">
 
+
                 <div class="card-header">
 
-                    <h2>Current Bill</h2>
+                    <h2>
+                        Current Bill
+                    </h2>
 
                     <p id="cartCount">
                         0 items
@@ -693,7 +842,9 @@
 
                 </div>
 
+
                 <div class="cart-content">
+
 
                     <div id="cartItems">
 
@@ -715,6 +866,9 @@
 
                     </div>
 
+
+                    <!-- CUSTOMER -->
+
                     <div class="customer-section">
 
                         <label for="billCustomer">
@@ -729,22 +883,78 @@
 
                     </div>
 
+
+                    <!-- SUMMARY -->
+
                     <div class="summary">
 
-                        <div class="summary-row">
-                            <span>Items</span>
-                            <strong id="summaryItems">0</strong>
-                        </div>
 
                         <div class="summary-row">
-                            <span>Subtotal</span>
-                            <strong id="summarySubtotal">₹0.00</strong>
+
+                            <span>
+                                Items
+                            </span>
+
+                            <strong id="summaryItems">
+                                0
+                            </strong>
+
                         </div>
 
+
                         <div class="summary-row">
-                            <span>Discount</span>
-                            <strong>₹0.00</strong>
+
+                            <span>
+                                Subtotal
+                            </span>
+
+                            <strong id="summarySubtotal">
+                                ₹0.00
+                            </strong>
+
                         </div>
+
+
+                        <!-- DISCOUNT -->
+
+                        <div class="summary-row">
+
+                            <span>
+                                Discount
+                            </span>
+
+
+                            <div class="discount-control">
+
+                                <input
+                                    type="number"
+                                    id="discountPercent"
+                                    class="discount-input"
+                                    min="0"
+                                    max="100"
+                                    step="0.01"
+                                    value="0"
+                                    placeholder="0"
+                                    aria-label="Discount percentage"
+                                >
+
+                                <span class="discount-symbol">
+                                    %
+                                </span>
+
+                                <strong
+                                    id="summaryDiscount"
+                                    class="discount-amount"
+                                >
+                                    ₹0.00
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TOTAL -->
 
                         <div class="total-row">
 
@@ -761,6 +971,9 @@
 
                         </div>
 
+
+                        <!-- CHECKOUT -->
+
                         <button
                             class="checkout-btn"
                             id="checkoutBtn"
@@ -769,7 +982,9 @@
                             Complete Sale
                         </button>
 
+
                         <div id="saleMessage"></div>
+
 
                     </div>
 
@@ -779,13 +994,19 @@
 
         </div>
 
+
         <!-- RECEIPT -->
 
-        <section class="card receipt" id="receipt">
+        <section
+            class="card receipt"
+            id="receipt"
+        >
 
             <div class="receipt-inner">
 
+
                 <div class="receipt-head">
+
 
                     <div>
 
@@ -794,31 +1015,40 @@
                         </div>
 
                         <div
-                            style="color:#64748b;font-size:12px;margin-top:4px;"
+                            style="
+                                color:#64748b;
+                                font-size:12px;
+                                margin-top:4px;
+                            "
                         >
                             Sales Receipt
                         </div>
 
                     </div>
 
+
                     <div class="receipt-status">
                         PAYMENT RECORDED
                     </div>
 
+
                 </div>
 
+
                 <div id="receiptDetails"></div>
+
 
             </div>
 
         </section>
 
+
     </main>
 
 </div>
+
 
 <script src="sales.js"></script>
 
 </body>
 </html>
-```

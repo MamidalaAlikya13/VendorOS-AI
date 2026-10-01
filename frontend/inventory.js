@@ -34,8 +34,7 @@ async function loadInventory() {
         );
 
 
-        const data =
-            await response.json();
+        const data = await response.json();
 
 
         if (!response.ok) {
@@ -180,6 +179,10 @@ async function loadInventory() {
                 document.createElement("tr");
 
 
+            // =====================================
+            // STOCK STATUS
+            // =====================================
+
             let stockClass =
                 "stock-good";
 
@@ -209,6 +212,114 @@ async function loadInventory() {
             }
 
 
+            // =====================================
+            // EXPIRY STATUS
+            // =====================================
+
+            let expiryClass =
+                "expiry-safe";
+
+            let expiryText =
+                "No expiry";
+
+            let expiryDateText =
+                "-";
+
+
+            if (product.expiry_date) {
+
+                const expiryDate =
+                    new Date(
+                        product.expiry_date +
+                        "T00:00:00"
+                    );
+
+
+                const today =
+                    new Date();
+
+                today.setHours(
+                    0,
+                    0,
+                    0,
+                    0
+                );
+
+
+                const difference =
+                    expiryDate.getTime() -
+                    today.getTime();
+
+
+                const daysRemaining =
+                    Math.ceil(
+                        difference /
+                        (1000 * 60 * 60 * 24)
+                    );
+
+
+                expiryDateText =
+                    product.expiry_date;
+
+
+                // EXPIRED
+
+                if (daysRemaining < 0) {
+
+                    expiryClass =
+                        "expiry-expired";
+
+                    expiryText =
+                        "Expired";
+
+
+                // 1-30 DAYS
+
+                } else if (
+                    daysRemaining <= 30
+                ) {
+
+                    expiryClass =
+                        "expiry-critical";
+
+                    expiryText =
+                        `${daysRemaining} day${
+                            daysRemaining === 1
+                                ? ""
+                                : "s"
+                        } left`;
+
+
+                // 31-90 DAYS
+
+                } else if (
+                    daysRemaining <= 90
+                ) {
+
+                    expiryClass =
+                        "expiry-warning";
+
+                    expiryText =
+                        `${daysRemaining} days left`;
+
+
+                // MORE THAN 90 DAYS
+
+                } else {
+
+                    expiryClass =
+                        "expiry-safe";
+
+                    expiryText =
+                        `${daysRemaining} days left`;
+                }
+            }
+
+
+            // =====================================
+            // TABLE ROW
+            // =====================================
+
             row.innerHTML = `
 
                 <td>
@@ -217,15 +328,18 @@ async function loadInventory() {
                     </span>
                 </td>
 
+
                 <td>
                     <span class="category-badge">
                         ${product.category}
                     </span>
                 </td>
 
+
                 <td>
                     ${product.sku || "-"}
                 </td>
+
 
                 <td>
                     ₹${Number(
@@ -233,15 +347,18 @@ async function loadInventory() {
                     ).toFixed(2)}
                 </td>
 
+
                 <td>
                     ₹${Number(
                         product.selling_price
                     ).toFixed(2)}
                 </td>
 
+
                 <td>
                     ${product.quantity}
                 </td>
+
 
                 <td>
                     <span
@@ -251,9 +368,41 @@ async function loadInventory() {
                     </span>
                 </td>
 
+
+                <!-- EXPIRY DATE + STATUS -->
+
                 <td>
-                    ${product.expiry_date || "-"}
+
+                    <div
+                        style="
+                            display:flex;
+                            flex-direction:column;
+                            gap:4px;
+                        "
+                    >
+
+                        <span
+                            class="expiry-badge ${expiryClass}"
+                        >
+                            ${expiryText}
+                        </span>
+
+
+                        <small
+                            style="
+                                color:#64748b;
+                                font-size:10px;
+                            "
+                        >
+                            ${expiryDateText}
+                        </small>
+
+                    </div>
+
                 </td>
+
+
+                <!-- ACTIONS -->
 
                 <td>
 
@@ -302,6 +451,7 @@ async function loadInventory() {
                     </div>
 
                 </td>
+
             `;
 
 
@@ -311,6 +461,10 @@ async function loadInventory() {
     }
 }
 
+
+// =============================================
+// EDIT PRODUCT
+// =============================================
 
 async function editProduct(productId) {
 
@@ -394,6 +548,10 @@ async function editProduct(productId) {
 }
 
 
+// =============================================
+// REMOVE PRODUCT
+// =============================================
+
 async function removeProduct(productId) {
 
     const confirmed =
@@ -470,5 +628,9 @@ async function removeProduct(productId) {
     }
 }
 
+
+// =============================================
+// LOAD INVENTORY
+// =============================================
 
 loadInventory();
