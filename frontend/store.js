@@ -17,6 +17,10 @@ try {
 }
 
 
+// --------------------------------------------------
+// Load existing store details
+// --------------------------------------------------
+
 async function loadStore() {
 
     try {
@@ -25,18 +29,30 @@ async function loadStore() {
             `https://vendoros-ai-backend.onrender.com/store/${user.user_id}`
         );
 
+        // No store created yet
         if (response.status === 404) {
+
+            // Show account owner if available
+            document.getElementById("ownerName").value =
+                user.name ||
+                user.full_name ||
+                user.username ||
+                "";
+
             return;
         }
 
         const data = await response.json();
 
         if (!response.ok) {
+
             throw new Error(
                 data.detail || "Unable to load store details."
             );
         }
 
+
+        // Fill store details
         document.getElementById("storeName").value =
             data.store_name || "";
 
@@ -52,9 +68,19 @@ async function loadStore() {
         document.getElementById("address").value =
             data.address || "";
 
+
+        // Fill account owner
+        document.getElementById("ownerName").value =
+            user.name ||
+            user.full_name ||
+            user.username ||
+            data.owner_name ||
+            "";
+
+
     } catch (error) {
 
-        console.error(error);
+        console.error("Load store error:", error);
 
         storeMessage.textContent =
             "Unable to load store details.";
@@ -64,9 +90,14 @@ async function loadStore() {
 }
 
 
+// --------------------------------------------------
+// Save / Update Store
+// --------------------------------------------------
+
 storeForm.addEventListener("submit", async (event) => {
 
     event.preventDefault();
+
 
     const storeName =
         document.getElementById("storeName").value.trim();
@@ -84,6 +115,7 @@ storeForm.addEventListener("submit", async (event) => {
         document.getElementById("address").value.trim();
 
 
+    // Validation
     if (!storeName || !businessType) {
 
         storeMessage.textContent =
@@ -95,6 +127,7 @@ storeForm.addEventListener("submit", async (event) => {
     }
 
 
+    // Show saving message
     storeMessage.textContent =
         "Saving your store details...";
 
@@ -102,17 +135,26 @@ storeForm.addEventListener("submit", async (event) => {
 
 
     const storeData = {
+
         store_name: storeName,
+
         business_type: businessType,
+
         phone: phone || null,
+
         email: email || null,
+
         address: address || null
+
     };
 
 
     try {
 
-        // Check whether this retailer already has a store
+        // --------------------------------------------------
+        // Check whether store already exists
+        // --------------------------------------------------
+
         const checkResponse = await fetch(
             `https://vendoros-ai-backend.onrender.com/store/${user.user_id}`
         );
@@ -121,9 +163,12 @@ storeForm.addEventListener("submit", async (event) => {
         let response;
 
 
+        // --------------------------------------------------
+        // Existing store → UPDATE
+        // --------------------------------------------------
+
         if (checkResponse.ok) {
 
-            // Existing store → UPDATE
             response = await fetch(
                 `https://vendoros-ai-backend.onrender.com/store/${user.user_id}`,
                 {
@@ -137,9 +182,14 @@ storeForm.addEventListener("submit", async (event) => {
                 }
             );
 
-        } else if (checkResponse.status === 404) {
+        }
 
-            // No store → CREATE
+        // --------------------------------------------------
+        // Store doesn't exist → CREATE
+        // --------------------------------------------------
+
+        else if (checkResponse.status === 404) {
+
             response = await fetch(
                 `https://vendoros-ai-backend.onrender.com/store/${user.user_id}`,
                 {
@@ -153,7 +203,9 @@ storeForm.addEventListener("submit", async (event) => {
                 }
             );
 
-        } else {
+        }
+
+        else {
 
             throw new Error(
                 "Unable to check existing store."
@@ -172,12 +224,17 @@ storeForm.addEventListener("submit", async (event) => {
         }
 
 
+        // --------------------------------------------------
+        // Success
+        // --------------------------------------------------
+
         storeMessage.textContent =
             data.message || "Store saved successfully!";
 
         storeMessage.style.color = "#16a34a";
 
 
+        // Return to dashboard
         setTimeout(() => {
 
             window.location.href = "dashboard.html";
@@ -187,10 +244,11 @@ storeForm.addEventListener("submit", async (event) => {
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Save store error:", error);
 
         storeMessage.textContent =
-            error.message || "Unable to connect to the server.";
+            error.message ||
+            "Unable to connect to the server.";
 
         storeMessage.style.color = "#dc2626";
     }
@@ -198,5 +256,8 @@ storeForm.addEventListener("submit", async (event) => {
 });
 
 
-// Load existing store details when the page opens
+// --------------------------------------------------
+// Load store when page opens
+// --------------------------------------------------
+
 loadStore();
