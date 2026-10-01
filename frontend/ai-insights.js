@@ -12,18 +12,24 @@ if (!userId) {
 ================================ */
 
 async function loadAIInsights() {
+
     try {
-        const salesResponse = await fetch(
-            `${API_BASE}/sales/${userId}`
-        );
 
-        const productsResponse = await fetch(
-            `${API_BASE}/products/${userId}`
-        );
+        const salesResponse =
+            await fetch(
+                `${API_BASE}/sales/${userId}`
+            );
 
-        const customersResponse = await fetch(
-            `${API_BASE}/customers/${userId}`
-        );
+        const productsResponse =
+            await fetch(
+                `${API_BASE}/products/${userId}`
+            );
+
+        const customersResponse =
+            await fetch(
+                `${API_BASE}/customers/${userId}`
+            );
+
 
         if (!salesResponse.ok) {
             throw new Error("Failed to load sales");
@@ -37,18 +43,49 @@ async function loadAIInsights() {
             throw new Error("Failed to load customers");
         }
 
-        const sales = await salesResponse.json();
-        const products = await productsResponse.json();
-        const customers = await customersResponse.json();
 
-        updateMetrics(sales, products, customers);
-        createSalesChart(sales);
-        createProductsChart(sales, products);
-        createInventoryChart(products);
-        updateInsights(sales, products, customers);
+        const sales =
+            await salesResponse.json();
+
+        const products =
+            await productsResponse.json();
+
+        const customers =
+            await customersResponse.json();
+
+
+        updateMetrics(
+            sales,
+            products,
+            customers
+        );
+
+        createSalesChart(
+            sales
+        );
+
+        createProductsChart(
+            sales,
+            products
+        );
+
+        createInventoryChart(
+            products
+        );
+
+        updateInsights(
+            sales,
+            products,
+            customers
+        );
+
 
     } catch (error) {
-        console.error("AI Insights Error:", error);
+
+        console.error(
+            "AI Insights Error:",
+            error
+        );
     }
 }
 
@@ -57,27 +94,47 @@ async function loadAIInsights() {
    METRICS
 ================================ */
 
-function updateMetrics(sales, products, customers) {
+function updateMetrics(
+    sales,
+    products,
+    customers
+) {
 
     let totalSales = 0;
 
+
     sales.forEach(function (sale) {
-        totalSales += Number(sale.total_amount || 0);
+
+        totalSales +=
+            Number(
+                sale.total_amount || 0
+            );
     });
 
+
     const totalSalesElement =
-        document.getElementById("totalSales");
+        document.getElementById(
+            "totalSales"
+        );
+
 
     if (totalSalesElement) {
+
         totalSalesElement.textContent =
-            formatCurrency(totalSales);
+            formatCurrency(
+                totalSales
+            );
     }
 
 
     const customerElement =
-        document.getElementById("customerCount");
+        document.getElementById(
+            "customerCount"
+        );
+
 
     if (customerElement) {
+
         customerElement.textContent =
             customers.length;
     }
@@ -85,15 +142,25 @@ function updateMetrics(sales, products, customers) {
 
     let healthyProducts = 0;
 
+
     products.forEach(function (product) {
 
         const quantity =
-            Number(product.quantity || 0);
+            Number(
+                product.quantity || 0
+            );
 
         const minimumStock =
-            Number(product.minimum_stock || 0);
+            Number(
+                product.minimum_stock || 0
+            );
 
-        if (quantity > minimumStock) {
+
+        if (
+            quantity >
+            minimumStock
+        ) {
+
             healthyProducts++;
         }
     });
@@ -101,28 +168,42 @@ function updateMetrics(sales, products, customers) {
 
     let healthPercentage = 0;
 
+
     if (products.length > 0) {
+
         healthPercentage =
             Math.round(
-                (healthyProducts / products.length) * 100
+                (
+                    healthyProducts /
+                    products.length
+                ) * 100
             );
     }
 
 
     const inventoryElement =
-        document.getElementById("inventoryHealth");
+        document.getElementById(
+            "inventoryHealth"
+        );
+
 
     if (inventoryElement) {
+
         inventoryElement.textContent =
             healthPercentage + "%";
     }
 
 
     const growthElement =
-        document.getElementById("salesGrowth");
+        document.getElementById(
+            "salesGrowth"
+        );
+
 
     if (growthElement) {
-        growthElement.textContent = "—";
+
+        growthElement.textContent =
+            "—";
     }
 }
 
@@ -131,10 +212,15 @@ function updateMetrics(sales, products, customers) {
    SALES TREND
 ================================ */
 
-function createSalesChart(sales) {
+function createSalesChart(
+    sales
+) {
 
     const canvas =
-        document.getElementById("salesTrendChart");
+        document.getElementById(
+            "salesTrendChart"
+        );
+
 
     if (!canvas) {
         return;
@@ -143,28 +229,54 @@ function createSalesChart(sales) {
 
     const dailySales = {};
 
-    const today = new Date();
+    const today =
+        new Date();
 
 
-    for (let i = 6; i >= 0; i--) {
+    for (
+        let i = 6;
+        i >= 0;
+        i--
+    ) {
 
-        const date = new Date();
+        const date =
+            new Date();
+
 
         date.setDate(
             today.getDate() - i
         );
 
+
         const year =
             date.getFullYear();
 
+
         const month =
-            String(date.getMonth() + 1).padStart(2, "0");
+            String(
+                date.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            );
+
 
         const day =
-            String(date.getDate()).padStart(2, "0");
+            String(
+                date.getDate()
+            ).padStart(
+                2,
+                "0"
+            );
+
 
         const key =
-            year + "-" + month + "-" + day;
+            year +
+            "-" +
+            month +
+            "-" +
+            day;
+
 
         dailySales[key] = 0;
     }
@@ -176,32 +288,61 @@ function createSalesChart(sales) {
             return;
         }
 
+
         const date =
-            new Date(sale.created_at);
+            new Date(
+                sale.created_at
+            );
+
 
         const year =
             date.getFullYear();
 
+
         const month =
-            String(date.getMonth() + 1).padStart(2, "0");
+            String(
+                date.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            );
+
 
         const day =
-            String(date.getDate()).padStart(2, "0");
+            String(
+                date.getDate()
+            ).padStart(
+                2,
+                "0"
+            );
+
 
         const key =
-            year + "-" + month + "-" + day;
+            year +
+            "-" +
+            month +
+            "-" +
+            day;
 
 
-        if (dailySales[key] !== undefined) {
+        if (
+            dailySales[key] !==
+            undefined
+        ) {
 
             dailySales[key] +=
-                Number(sale.total_amount || 0);
+                Number(
+                    sale.total_amount || 0
+                );
         }
     });
 
 
     const keys =
-        Object.keys(dailySales);
+        Object.keys(
+            dailySales
+        );
+
 
     const labels = [];
     const values = [];
@@ -212,6 +353,7 @@ function createSalesChart(sales) {
         const parts =
             key.split("-");
 
+
         const date =
             new Date(
                 Number(parts[0]),
@@ -219,12 +361,17 @@ function createSalesChart(sales) {
                 Number(parts[2])
             );
 
+
         labels.push(
-            date.toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "short"
-            })
+            date.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short"
+                }
+            )
         );
+
 
         values.push(
             dailySales[key]
@@ -232,50 +379,65 @@ function createSalesChart(sales) {
     });
 
 
-    new Chart(canvas, {
+    new Chart(
+        canvas,
+        {
 
-        type: "line",
+            type: "line",
 
-        data: {
-            labels: labels,
+            data: {
 
-            datasets: [{
-                label: "Sales",
+                labels: labels,
 
-                data: values,
+                datasets: [{
 
-                borderColor: "#2563eb",
+                    label: "Sales",
 
-                backgroundColor:
-                    "rgba(37, 99, 235, 0.10)",
+                    data: values,
 
-                borderWidth: 3,
+                    borderColor:
+                        "#2563eb",
 
-                fill: true,
+                    backgroundColor:
+                        "rgba(37, 99, 235, 0.10)",
 
-                tension: 0.4
-            }]
-        },
+                    borderWidth: 3,
 
-        options: {
+                    fill: true,
 
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-                legend: {
-                    display: false
-                }
+                    tension: 0.4
+                }]
             },
 
-            scales: {
-                y: {
-                    beginAtZero: true
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio:
+                    false,
+
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+                    }
+                },
+
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero:
+                            true
+                    }
                 }
             }
         }
-    });
+    );
 }
 
 
@@ -283,10 +445,16 @@ function createSalesChart(sales) {
    TOP PRODUCTS
 ================================ */
 
-function createProductsChart(sales, products) {
+function createProductsChart(
+    sales,
+    products
+) {
 
     const canvas =
-        document.getElementById("topProductsChart");
+        document.getElementById(
+            "topProductsChart"
+        );
+
 
     if (!canvas) {
         return;
@@ -297,113 +465,169 @@ function createProductsChart(sales, products) {
     const productQuantities = {};
 
 
-    products.forEach(function (product) {
+    products.forEach(
+        function (product) {
 
-        productNames[product.id] =
-            product.product_name;
+            productNames[
+                product.id
+            ] =
+                product.product_name;
 
-        productQuantities[product.id] = 0;
-    });
 
-
-    sales.forEach(function (sale) {
-
-        const productId =
-            sale.product_id;
-
-        if (productQuantities[productId] === undefined) {
-            productQuantities[productId] = 0;
+            productQuantities[
+                product.id
+            ] = 0;
         }
+    );
 
-        productQuantities[productId] +=
-            Number(sale.quantity || 0);
-    });
+
+    sales.forEach(
+        function (sale) {
+
+            const productId =
+                sale.product_id;
+
+
+            if (
+                productQuantities[
+                    productId
+                ] === undefined
+            ) {
+
+                productQuantities[
+                    productId
+                ] = 0;
+            }
+
+
+            productQuantities[
+                productId
+            ] +=
+                Number(
+                    sale.quantity || 0
+                );
+        }
+    );
 
 
     const productList = [];
 
 
-    Object.keys(productQuantities).forEach(
+    Object.keys(
+        productQuantities
+    ).forEach(
         function (productId) {
 
             productList.push({
+
                 name:
-                    productNames[productId] ||
-                    "Product " + productId,
+                    productNames[
+                        productId
+                    ] ||
+                    "Product " +
+                    productId,
 
                 quantity:
-                    productQuantities[productId]
+                    productQuantities[
+                        productId
+                    ]
             });
         }
     );
 
 
-    productList.sort(function (a, b) {
-        return b.quantity - a.quantity;
-    });
+    productList.sort(
+        function (a, b) {
+
+            return b.quantity -
+                a.quantity;
+        }
+    );
 
 
     const topProducts =
-        productList.slice(0, 5);
+        productList.slice(
+            0,
+            5
+        );
 
 
     const labels =
-        topProducts.map(function (product) {
-            return product.name;
-        });
+        topProducts.map(
+            function (product) {
+
+                return product.name;
+            }
+        );
 
 
     const values =
-        topProducts.map(function (product) {
-            return product.quantity;
-        });
+        topProducts.map(
+            function (product) {
+
+                return product.quantity;
+            }
+        );
 
 
-    new Chart(canvas, {
+    new Chart(
+        canvas,
+        {
 
-        type: "bar",
+            type: "bar",
 
-        data: {
+            data: {
 
-            labels: labels,
+                labels: labels,
 
-            datasets: [{
+                datasets: [{
 
-                label: "Units Sold",
+                    label:
+                        "Units Sold",
 
-                data: values,
+                    data: values,
 
-                backgroundColor: "#3b82f6",
+                    backgroundColor:
+                        "#3b82f6",
 
-                borderRadius: 7
-            }]
-        },
-
-        options: {
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-                    display: false
-                }
+                    borderRadius: 7
+                }]
             },
 
-            scales: {
 
-                y: {
-                    beginAtZero: true,
+            options: {
 
-                    ticks: {
-                        precision: 0
+                responsive: true,
+
+                maintainAspectRatio:
+                    false,
+
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+                    }
+                },
+
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero:
+                            true,
+
+                        ticks: {
+
+                            precision: 0
+                        }
                     }
                 }
             }
         }
-    });
+    );
 }
 
 
@@ -411,10 +635,15 @@ function createProductsChart(sales, products) {
    INVENTORY HEALTH
 ================================ */
 
-function createInventoryChart(products) {
+function createInventoryChart(
+    products
+) {
 
     const canvas =
-        document.getElementById("inventoryHealthChart");
+        document.getElementById(
+            "inventoryHealthChart"
+        );
+
 
     if (!canvas) {
         return;
@@ -426,76 +655,106 @@ function createInventoryChart(products) {
     let outOfStock = 0;
 
 
-    products.forEach(function (product) {
+    products.forEach(
+        function (product) {
 
-        const quantity =
-            Number(product.quantity || 0);
+            const quantity =
+                Number(
+                    product.quantity || 0
+                );
 
-        const minimumStock =
-            Number(product.minimum_stock || 0);
+
+            const minimumStock =
+                Number(
+                    product.minimum_stock || 0
+                );
 
 
-        if (quantity <= 0) {
+            if (quantity <= 0) {
 
-            outOfStock++;
+                outOfStock++;
 
-        } else if (quantity <= minimumStock) {
+            } else if (
+                quantity <=
+                minimumStock
+            ) {
 
-            lowStock++;
+                lowStock++;
 
-        } else {
+            } else {
 
-            healthy++;
+                healthy++;
+            }
         }
-    });
+    );
 
 
-    new Chart(canvas, {
+    new Chart(
+        canvas,
+        {
 
-        type: "doughnut",
+            type: "doughnut",
 
-        data: {
+            data: {
 
-            labels: [
-                "Healthy Stock",
-                "Low Stock",
-                "Out of Stock"
-            ],
+                labels: [
 
-            datasets: [{
+                    "Healthy Stock",
 
-                data: [
-                    healthy,
-                    lowStock,
-                    outOfStock
+                    "Low Stock",
+
+                    "Out of Stock"
                 ],
 
-                backgroundColor: [
-                    "#22c55e",
-                    "#f59e0b",
-                    "#ef4444"
-                ],
 
-                borderWidth: 0
-            }]
-        },
+                datasets: [{
 
-        options: {
+                    data: [
 
-            responsive: true,
+                        healthy,
 
-            maintainAspectRatio: false,
+                        lowStock,
 
-            cutout: "68%",
+                        outOfStock
+                    ],
 
-            plugins: {
 
-                legend: {
-                    position: "bottom"
+                    backgroundColor: [
+
+                        "#22c55e",
+
+                        "#f59e0b",
+
+                        "#ef4444"
+                    ],
+
+
+                    borderWidth: 0
+                }]
+            },
+
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio:
+                    false,
+
+                cutout: "68%",
+
+
+                plugins: {
+
+                    legend: {
+
+                        position:
+                            "bottom"
+                    }
                 }
             }
         }
-    });
+    );
 }
 
 
@@ -503,14 +762,23 @@ function createInventoryChart(products) {
    BUSINESS INSIGHTS
 ================================ */
 
-function updateInsights(sales, products, customers) {
+function updateInsights(
+    sales,
+    products,
+    customers
+) {
 
     const salesInsight =
-        document.getElementById("salesInsight");
+        document.getElementById(
+            "salesInsight"
+        );
+
 
     if (salesInsight) {
 
-        if (sales.length === 0) {
+        if (
+            sales.length === 0
+        ) {
 
             salesInsight.textContent =
                 "No sales have been recorded yet.";
@@ -527,29 +795,94 @@ function updateInsights(sales, products, customers) {
     let lowStock = 0;
     let outOfStock = 0;
 
-
-    products.forEach(function (product) {
-
-        const quantity =
-            Number(product.quantity || 0);
-
-        const minimumStock =
-            Number(product.minimum_stock || 0);
+    let expiredStockLoss = 0;
+    let expiredProductCount = 0;
 
 
-        if (quantity <= 0) {
+    const today =
+        new Date();
 
-            outOfStock++;
 
-        } else if (quantity <= minimumStock) {
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
 
-            lowStock++;
+
+    products.forEach(
+        function (product) {
+
+            const quantity =
+                Number(
+                    product.quantity || 0
+                );
+
+
+            const minimumStock =
+                Number(
+                    product.minimum_stock || 0
+                );
+
+
+            // =========================
+            // STOCK STATUS
+            // =========================
+
+            if (quantity <= 0) {
+
+                outOfStock++;
+
+            } else if (
+                quantity <=
+                minimumStock
+            ) {
+
+                lowStock++;
+            }
+
+
+            // =========================
+            // EXPIRED STOCK LOSS
+            // =========================
+
+            if (
+                product.expiry_date
+            ) {
+
+                const expiryDate =
+                    new Date(
+                        product.expiry_date +
+                        "T00:00:00"
+                    );
+
+
+                if (
+                    expiryDate <
+                    today
+                ) {
+
+                    expiredProductCount++;
+
+
+                    expiredStockLoss +=
+                        quantity *
+                        Number(
+                            product.purchase_price ||
+                            0
+                        );
+                }
+            }
         }
-    });
+    );
 
 
     const inventoryInsight =
-        document.getElementById("inventoryInsight");
+        document.getElementById(
+            "inventoryInsight"
+        );
+
 
     if (inventoryInsight) {
 
@@ -561,8 +894,41 @@ function updateInsights(sales, products, customers) {
     }
 
 
+    // =========================
+    // POTENTIAL LOSS
+    // =========================
+
+    const potentialLossInsight =
+        document.getElementById(
+            "potentialLossInsight"
+        );
+
+
+    if (potentialLossInsight) {
+
+        if (
+            expiredProductCount === 0
+        ) {
+
+            potentialLossInsight.textContent =
+                "No potential loss from expired stock has been identified.";
+
+        } else {
+
+            potentialLossInsight.textContent =
+                formatCurrency(
+                    expiredStockLoss
+                ) +
+                " potential loss identified from expired stock.";
+        }
+    }
+
+
     const customerInsight =
-        document.getElementById("customerInsight");
+        document.getElementById(
+            "customerInsight"
+        );
+
 
     if (customerInsight) {
 
@@ -577,17 +943,21 @@ function updateInsights(sales, products, customers) {
    CURRENCY
 ================================ */
 
-function formatCurrency(amount) {
+function formatCurrency(
+    amount
+) {
 
-    return new Intl.NumberFormat("en-IN", {
+    return new Intl.NumberFormat(
+        "en-IN",
+        {
 
-        style: "currency",
+            style: "currency",
 
-        currency: "INR",
+            currency: "INR",
 
-        maximumFractionDigits: 0
-
-    }).format(amount);
+            maximumFractionDigits: 0
+        }
+    ).format(amount);
 }
 
 
@@ -598,6 +968,8 @@ function formatCurrency(amount) {
 document.addEventListener(
     "DOMContentLoaded",
     function () {
+
         loadAIInsights();
+
     }
 );
